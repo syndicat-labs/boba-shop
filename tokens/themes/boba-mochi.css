@@ -1,0 +1,53 @@
+/* boba-mochi.css — thesis: Joy as system; rounded softness guides choice */
+[data-theme="boba-mochi"] {
+  --boba-moc-bg: #FFF7F9;
+  --boba-moc-bg-subtle: #FFF0F4;
+  --boba-moc-ink: #2D1B2E;
+  --boba-moc-muted: #8B6F8A;
+  --boba-moc-line: #F5D6E0;
+  --boba-moc-pink: #FF6B9D;
+  --boba-moc-pink-strong: #E84A7F;
+  --boba-moc-lav: #C4B5FD;
+  --boba-moc-mint: #6EE7B7;
+  --boba-moc-cream: #FFFBEB;
+  --boba-moc-navy: #2D1B2E;
+
+  --boba-color-bg: var(--boba-moc-bg);
+  --boba-color-bg-subtle: var(--boba-moc-bg-subtle);
+  --boba-color-bg-elevated: #ffffff;
+  --boba-color-bg-inverse: var(--boba-moc-navy);
+  --boba-color-text: var(--boba-moc-ink);
+  --boba-color-text-muted: var(--boba-moc-muted);
+  --boba-color-text-inverse: #ffffff;
+  --boba-color-text-faint: #C9A8C4;
+  --boba-color-border: var(--boba-moc-line);
+  --boba-color-border-strong: var(--boba-moc-pink);
+  --boba-color-accent: var(--boba-moc-pink);
+  --boba-color-accent-text: #ffffff;
+  --boba-color-accent-subtle: #FFF0F4;
+  --boba-color-card-bg: #ffffff;
+  --boba-color-card-border: #FCE7F3;
+  --boba-color-chip-bg: #ffffff;
+  --boba-color-chip-active-bg: var(--boba-moc-pink);
+  --boba-color-chip-active-text: #ffffff;
+
+  --boba-font-display: 'Nunito', 'Inter', system-ui, sans-serif;
+  --boba-font-body: 'Nunito', 'Inter', system-ui, sans-serif;
+  --boba-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --boba-radius-sm: 12px;
+  --boba-radius-md: 16px;
+  --boba-radius-lg: 20px;
+  --boba-radius-xl: 28px;
+  --boba-radius-pill: 999px;
+
+  --boba-shadow-sm: 0 2px 8px rgba(232,74,127,0.08);
+  --boba-shadow-md: 0 8px 24px rgba(232,74,127,0.12);
+  --boba-shadow-lg: 0 16px 40px rgba(232,74,127,0.16);
+
+  --boba-duration-fast: 180ms;
+  --boba-duration-base: 280ms;
+  --boba-duration-slow: 420ms;
+  --boba-ease-default: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --boba-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}

@@ -1,0 +1,26 @@
+/* boba-pulse.css — thesis: Momentum converts; urgency + motion trigger action
+ * Slots: surfaceBoundary:elevation / depthModel:shadow / darkStrategy:separate-palette
+ * cornerPhilosophy:expressive-mixed / shapeCarriesBrand:yes / colorRole:generative
+ * functionalColorContainment:unrestricted / colorInHierarchy:primary / polarityEncoding:color-led
+ * typeRoleAssignment: grotesk black + mono timers / monospaceScope:data-only
+ * density:comfortable / spaceAllocation:earned-by-importance / sectionRhythm:elevation
+ * motion:{180-320ms,ease-spring,expressiveAllowedIn:[badge,timer,cta]} / decoration:gradient-and-illustration
+ * emphasisSurfaceBudget:unbounded / hierarchySignals:[colour,elevation,position,weight]
+ */
+[data-theme="boba-pulse"]{
+  --boba-pul-bg:#0B0B14;--boba-pul-bg-sub:#16162A;--boba-pul-card:#1A1A2E;--boba-pul-line:#2A2A44;
+  --boba-pul-ink:#FFFFFF;--boba-pul-muted:#9AA0C8;--boba-pul-faint:#6B6FA3;
+  --boba-pul-accent:#FF3B5C;--boba-pul-accent2:#00E5CC;--boba-pul-amber:#FFB800;--boba-pul-violet:#7C3AED;
+  --boba-color-bg:var(--boba-pul-bg);--boba-color-bg-subtle:var(--boba-pul-bg-sub);--boba-color-bg-elevated:var(--boba-pul-card);
+  --boba-color-bg-inverse:#FFFFFF;--boba-color-text:var(--boba-pul-ink);--boba-color-text-muted:var(--boba-pul-muted);
+  --boba-color-text-inverse:#0B0B14;--boba-color-text-faint:var(--boba-pul-faint);
+  --boba-color-border:var(--boba-pul-line);--boba-color-border-strong:#FFFFFF;
+  --boba-color-accent:var(--boba-pul-accent);--boba-color-accent-text:#fff;--boba-color-accent-subtle:#2A0F18;
+  --boba-color-card-bg:var(--boba-pul-card);--boba-color-card-border:var(--boba-pul-line);
+  --boba-color-chip-bg:#1E1E3A;--boba-color-chip-active-bg:#FFFFFF;--boba-color-chip-active-text:#0B0B14;
+  --boba-font-display:'Space Grotesk','Inter',system-ui,sans-serif;--boba-font-body:'Inter',system-ui,sans-serif;--boba-font-mono:'JetBrains Mono',monospace;
+  --boba-radius-sm:8px;--boba-radius-md:12px;--boba-radius-lg:20px;--boba-radius-xl:24px;--boba-radius-pill:999px;
+  --boba-shadow-sm:0 2px 12px rgba(0,0,0,0.4);--boba-shadow-md:0 8px 28px rgba(0,0,0,0.5);--boba-shadow-lg:0 16px 48px rgba(255,59,92,0.22);
+  --boba-duration-fast:160ms;--boba-duration-base:240ms;--boba-duration-slow:360ms;
+  --boba-ease-default:cubic-bezier(0.34,1.56,0.64,1);--boba-ease-spring:cubic-bezier(0.34,1.56,0.64,1);
+}

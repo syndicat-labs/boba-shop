@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en" data-theme="boba-bloom">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>BLOOM — Menu / Boba Shop</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --boba-color-bg:#FFFCF2;--boba-color-bg-subtle:#FFF3D6;--boba-color-bg-elevated:#FFFFFF;--boba-color-bg-inverse:#2B1E0F;
+  --boba-color-text:#2B1E0F;--boba-color-text-muted:#8C7A5B;--boba-color-text-inverse:#FFFCF2;--boba-color-text-faint:#B8A48A;
+  --boba-color-border:#F0D9A8;--boba-color-border-strong:#2B1E0F;--boba-color-accent:#FF8A00;--boba-color-accent-text:#fff;--boba-color-accent-subtle:#FFF7D6;
+  --boba-color-card-bg:#FFFFFF;--boba-color-card-border:#F0D9A8;--boba-color-chip-bg:#FFFFFF;--boba-color-chip-active-bg:#2B1E0F;--boba-color-chip-active-text:#FFFCF2;
+  --boba-font-display:'Nunito',system-ui,sans-serif;--boba-font-body:'Inter',system-ui,sans-serif;--boba-font-mono:'JetBrains Mono',monospace;
+  --boba-radius-sm:10px;--boba-radius-md:16px;--boba-radius-lg:20px;--boba-radius-xl:28px;--boba-radius-pill:999px;
+  --boba-shadow-sm:0 2px 10px rgba(43,30,15,0.07);--boba-shadow-md:0 8px 24px rgba(43,30,15,0.10);--boba-shadow-lg:0 16px 40px rgba(43,30,15,0.14);
+  --boba-ease:cubic-bezier(0.2,0,0,1);--boba-dur:220ms;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--boba-font-body);background:var(--boba-color-bg);color:var(--boba-color-text);max-width:390px;margin:0 auto;min-height:100dvh;-webkit-font-smoothing:antialiased}
+button{font:inherit}
+:focus-visible{outline:2px solid #FF8A00;outline-offset:2px}
+
+/* header — warm, market */
+.header{position:sticky;top:0;z-index:20;background:rgba(255,252,242,0.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--boba-color-border);padding:10px 14px;display:flex;align-items:center;gap:10px}
+.brand{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#FF8A00,#FF3B5C);display:grid;place-items:center;color:#fff;font-size:18px;box-shadow:var(--boba-shadow-sm);border:2px solid #fff}
+.brand-text{line-height:1}
+.brand-name{font-family:var(--boba-font-display);font-weight:800;font-size:14px;letter-spacing:-0.02em}
+.brand-sub{font-size:11px;color:var(--boba-color-text-muted)}
+.header-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
+.pill-btn{padding:7px 12px;border-radius:var(--boba-radius-pill);border:1px solid var(--boba-color-border);background:var(--boba-color-bg-elevated);font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px}
+.pill-btn--dark{background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse);border-color:var(--boba-color-bg-inverse)}
+.cart{width:40px;height:40px;border-radius:50%;background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse);display:grid;place-items:center;position:relative;border:0;cursor:pointer}
+.cart-count{position:absolute;top:-4px;right:-4px;background:#FF8A00;color:#fff;font-family:var(--boba-font-mono);font-size:10px;min-width:18px;height:18px;display:grid;place-items:center;border-radius:var(--boba-radius-pill);border:2px solid var(--boba-color-bg)}
+
+/* buffet hero — topping buffet invites basket growth */
+.hero{margin:12px 14px 0;background:var(--boba-color-bg-elevated);border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-xl);overflow:hidden;box-shadow:var(--boba-shadow-sm)}
+.hero-top{background:linear-gradient(135deg,#FFF3D6 0%, #FFE9B0 60%, #FFD6E0 100%);padding:14px 16px;display:flex;gap:12px;align-items:center;position:relative}
+.hero-ill{width:56px;height:56px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:26px;box-shadow:0 6px 16px rgba(43,30,15,0.12);flex-shrink:0}
+.hero-title{font-family:var(--boba-font-display);font-size:15px;font-weight:800;line-height:1.2}
+.hero-sub{font-size:11px;color:var(--boba-color-text-muted);margin-top:3px;line-height:1.4}
+.hero-cta{margin-top:8px;background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse);border:0;padding:7px 12px;border-radius:var(--boba-radius-pill);font-size:11px;font-weight:700;cursor:pointer}
+.buffet{padding:12px 14px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.buffet::-webkit-scrollbar{display:none}
+.topping{flex-shrink:0;width:72px;text-align:center}
+.topping-ic{width:56px;height:56px;border-radius:50%;background:var(--boba-color-bg-subtle);border:1px solid var(--boba-color-border);display:grid;place-items:center;font-size:20px;margin:0 auto;position:relative}
+.topping-ic::after{content:"+$0.80";position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse);font-family:var(--boba-font-mono);font-size:8px;padding:2px 5px;border-radius:var(--boba-radius-pill);white-space:nowrap}
+.topping-name{font-size:10px;font-weight:600;margin-top:10px;white-space:nowrap}
+.topping-add{margin-top:6px;width:28px;height:28px;border-radius:50%;border:1px solid var(--boba-color-border);background:#fff;display:grid;place-items:center;cursor:pointer;margin-inline:auto;font-size:14px}
+.topping-add--on{background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse);border-color:var(--boba-color-bg-inverse)}
+
+/* search + chips + bouquet */
+.search-wrap{padding:12px 14px 0}
+.search{display:flex;align-items:center;gap:10px;background:var(--boba-color-bg-elevated);border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-pill);padding:10px 14px;box-shadow:var(--boba-shadow-sm)}
+.search input{flex:1;border:0;outline:0;background:transparent;font-size:13px}
+.search input::placeholder{color:var(--boba-color-text-faint)}
+.chips{padding:12px 14px 0;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;padding:8px 14px;border-radius:var(--boba-radius-pill);border:1px solid var(--boba-color-border);background:var(--boba-color-chip-bg);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.chip[aria-selected="true"]{background:var(--boba-color-chip-active-bg);color:var(--boba-color-chip-active-text);border-color:var(--boba-color-chip-active-bg)}
+.bouquet{margin:12px 14px 0;background:linear-gradient(135deg,#FF8A00 0%,#FF6B6B 100%);border-radius:var(--boba-radius-lg);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#fff;box-shadow:var(--boba-shadow-md)}
+.bouquet-title{font-weight:800;font-size:13px}
+.bouquet-sub{font-size:11px;opacity:0.92;margin-top:2px}
+.bouquet-cta{background:#fff;color:#FF8A00;border:0;padding:8px 12px;border-radius:var(--boba-radius-pill);font-weight:800;font-size:11px;cursor:pointer;white-space:nowrap}
+
+/* bento grid — bloom signature, buffet play */
+.section{padding:18px 14px 0}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.section-title{font-family:var(--boba-font-display);font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px}
+.section-title::before{content:"";width:8px;height:8px;background:var(--boba-color-accent);border-radius:50%}
+.section-link{font-size:11px;font-weight:700;color:var(--boba-color-accent);cursor:pointer}
+.bento{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{background:var(--boba-color-card-bg);border:1px solid var(--boba-color-card-border);border-radius:var(--boba-radius-lg);overflow:hidden;box-shadow:var(--boba-shadow-sm);display:flex;flex-direction:column}
+.card-thumb{height:96px;background:var(--boba-color-bg-subtle);display:grid;place-items:center;font-size:30px;position:relative}
+.card-thumb--mango{background:linear-gradient(135deg,#FFF3D6,#FFD6A0)}
+.card-thumb--taro{background:linear-gradient(135deg,#F3E8FF,#DDD6FE)}
+.card-thumb--matcha{background:linear-gradient(135deg,#DCFCE7,#BBF7D0)}
+.badge{position:absolute;top:8px;left:8px;font-size:9px;letter-spacing:0.06em;text-transform:uppercase;padding:4px 7px;border-radius:var(--boba-radius-pill);font-weight:800;background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse)}
+.badge--accent{background:#FF8A00;color:#fff}
+.badge--taro{background:#8B5CF6;color:#fff}
+.heart{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.92);display:grid;place-items:center;font-size:12px;border:1px solid var(--boba-color-border);cursor:pointer}
+.card-body{padding:10px 12px 12px;flex:1;display:flex;flex-direction:column}
+.card-name{font-size:13px;font-weight:800;line-height:1.2}
+.card-desc{font-size:11px;color:var(--boba-color-text-muted);margin-top:3px;line-height:1.3;flex:1}
+.toppings-preview{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.topping-pill{font-size:10px;padding:3px 6px;border-radius:var(--boba-radius-pill);border:1px dashed var(--boba-color-border);background:var(--boba-color-bg-subtle);color:var(--boba-color-text-muted)}
+.card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:10px;gap:8px}
+.price{font-family:var(--boba-font-mono);font-size:13px;font-weight:700}
+.add{border:0;background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse);padding:8px 14px;border-radius:var(--boba-radius-pill);font-size:11px;font-weight:800;cursor:pointer;box-shadow:0 4px 10px rgba(43,30,15,0.18)}
+.add--ghost{background:#fff;color:var(--boba-color-text);border:1px solid var(--boba-color-border);box-shadow:none}
+.add:active{transform:scale(0.97)}
+.card--featured{grid-column:1 / -1;flex-direction:row;align-items:stretch}
+.card--featured .card-thumb{width:120px;height:auto;min-height:120px;flex-shrink:0}
+.card--featured .card-body{justify-content:center}
+
+/* bundle row */
+.bundle{margin:14px 14px 0;background:var(--boba-color-bg-elevated);border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-lg);padding:12px;display:flex;gap:12px;align-items:center}
+.bundle-ics{display:flex;align-items:center;gap:0}
+.bundle-ic{width:36px;height:36px;border-radius:50%;background:var(--boba-color-bg-subtle);border:2px solid #fff;display:grid;place-items:center;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.bundle-ic + .bundle-ic{margin-left:-8px}
+.bundle-text{font-size:12px;font-weight:700}
+.bundle-sub{font-size:11px;color:var(--boba-color-text-muted);margin-top:2px}
+.bundle-cta{margin-left:auto;background:#FF8A00;color:#fff;border:0;padding:8px 12px;border-radius:var(--boba-radius-pill);font-weight:800;font-size:11px;cursor:pointer;white-space:nowrap}
+
+/* bottom */
+.sticky{position:sticky;bottom:0;background:linear-gradient(to top, var(--boba-color-bg) 80%, transparent);padding:12px 14px calc(12px + env(safe-area-inset-bottom));display:flex;gap:10px;align-items:center;margin-top:8px}
+.sticky-card{flex:1;background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse);border-radius:var(--boba-radius-lg);padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:0 8px 24px rgba(43,30,15,0.18)}
+.sticky-total{font-family:var(--boba-font-mono);font-size:12px;font-weight:700}
+.sticky-sub{font-size:11px;opacity:0.8}
+.sticky-cta{background:#FF8A00;color:#fff;border:0;padding:12px 18px;border-radius:var(--boba-radius-pill);font-weight:800;font-size:13px;cursor:pointer;box-shadow:0 6px 16px rgba(255,138,0,0.35);white-space:nowrap}
+.progress{height:6px;background:rgba(255,255,255,0.18);border-radius:var(--boba-radius-pill);overflow:hidden;margin-top:6px}
+.fill{height:100%;width:58%;background:#FF8A00;border-radius:var(--boba-radius-pill)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="brand">✿</div>
+  <div class="brand-text"><div class="brand-name">Bloom Boba</div><div class="brand-sub">Toppings buffet · Mix & bloom</div></div>
+  <div class="header-actions">
+    <button class="pill-btn">Pickup · 8 min</button>
+    <button class="cart" aria-label="Cart 2">⧉<span class="cart-count">2</span></button>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-top">
+    <div class="hero-ill">🧋</div>
+    <div>
+      <div class="hero-title">Build your bloom — toppings buffet</div>
+      <div class="hero-sub">Pearls, crystal, pudding, red bean, grass jelly… tap to sprinkle. Mix 3 for $2.00.</div>
+      <button class="hero-cta">Start blooming →</button>
+    </div>
+  </div>
+  <div class="buffet" aria-label="Toppings buffet">
+    <div class="topping"><div class="topping-ic">⚪</div><div class="topping-name">Pearls</div><button class="topping-add topping-add--on">✓</button></div>
+    <div class="topping"><div class="topping-ic">🔮</div><div class="topping-name">Crystal</div><button class="topping-add">+</button></div>
+    <div class="topping"><div class="topping-ic">🍮</div><div class="topping-name">Pudding</div><button class="topping-add">+</button></div>
+    <div class="topping"><div class="topping-ic">🫘</div><div class="topping-name">Red bean</div><button class="topping-add">+</button></div>
+    <div class="topping"><div class="topping-ic">🌿</div><div class="topping-name">Grass jelly</div><button class="topping-add">+</button></div>
+    <div class="topping"><div class="topping-ic">🥥</div><div class="topping-name">Coconut</div><button class="topping-add">+</button></div>
+    <div class="topping"><div class="topping-ic">🍓</div><div class="topping-name">Aloe</div><button class="topping-add">+</button></div>
+  </div>
+</div>
+
+<div class="search-wrap"><label class="search"><span style="opacity:0.6">⌕</span><input placeholder="Search — taro, mango, yuzu, hojicha…"/><span style="font-family:var(--boba-font-mono);font-size:10px;color:var(--boba-color-text-faint)">/</span></label></div>
+
+<nav class="chips" role="tablist" aria-label="Categories">
+  <button class="chip" role="tab" aria-selected="true">✿ All 12</button>
+  <button class="chip" role="tab" aria-selected="false">Classic</button>
+  <button class="chip" role="tab" aria-selected="false">Fruit Tea</button>
+  <button class="chip" role="tab" aria-selected="false">Fresh Milk</button>
+  <button class="chip" role="tab" aria-selected="false">Cheese Foam</button>
+  <button class="chip" role="tab" aria-selected="false">Slush</button>
+</nav>
+
+<div class="bouquet">
+  <div><div class="bouquet-title">Bouquet deal — 3 drinks, save $3</div><div class="bouquet-sub">Build any 3 · toppings included · perfect for sharing</div></div>
+  <button class="bouquet-cta">Build →</button>
+</div>
+
+<section class="section" aria-labelledby="sec-classic">
+  <div class="section-head"><h2 id="sec-classic" class="section-title">Classic Milk Tea</h2><a class="section-link">See all →</a></div>
+  <div class="bento">
+    <article class="card card--featured">
+      <div class="card-thumb card-thumb--mango"><span class="badge badge--accent">Bloom pick</span>🧋<button class="heart">♡</button></div>
+      <div class="card-body">
+        <div class="card-name">Brown Sugar Boba</div><div class="card-desc">Muscovado · 4h pearls · choose 2 toppings free in bouquet</div>
+        <div class="toppings-preview"><span class="topping-pill">+ pearls ✓</span><span class="topping-pill">+ crystal</span><span class="topping-pill">Add…</span></div>
+        <div class="card-foot"><span class="price">$5.90</span><button class="add">Add bloom +</button></div>
+      </div>
+    </article>
+    <article class="card">
+      <div class="card-thumb">🍵<button class="heart">♡</button></div>
+      <div class="card-body"><div class="card-name">Classic Pearl</div><div class="card-desc">Assam · cane sugar</div><div class="toppings-preview"><span class="topping-pill">pearls ✓</span></div><div class="card-foot"><span class="price">$4.50</span><button class="add add--ghost">Added ✓</button></div></div>
+    </article>
+    <article class="card">
+      <div class="card-thumb card-thumb--taro">🍠<span class="badge badge--taro">Popular</span><button class="heart">♥</button></div>
+      <div class="card-body"><div class="card-name">Taro Milk</div><div class="card-desc">Real taro · no powder</div><div class="toppings-preview"><span class="topping-pill">+ red bean</span></div><div class="card-foot"><span class="price">$5.20</span><button class="add">Add +</button></div></div>
+    </article>
+    <article class="card">
+      <div class="card-thumb card-thumb--matcha">🍃<button class="heart">♡</button></div>
+      <div class="card-body"><div class="card-name">Matcha Latte</div><div class="card-desc">Uji · oat milk</div><div class="toppings-preview"><span class="topping-pill">+ grass jelly</span></div><div class="card-foot"><span class="price">$5.40</span><button class="add">Add +</button></div></div>
+    </article>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="sec-fruit">
+  <div class="section-head"><h2 id="sec-fruit" class="section-title">Fruit Tea</h2><a class="section-link">See all →</a></div>
+  <div class="bento">
+    <article class="card"><div class="card-thumb">🥭<button class="heart">♡</button></div><div class="card-body"><div class="card-name">Mango Pomelo</div><div class="card-desc">Mango · pomelo · sago</div><div class="toppings-preview"><span class="topping-pill">sago ✓</span><span class="topping-pill">+ aloe</span></div><div class="card-foot"><span class="price">$6.20</span><button class="add">Add +</button></div></div></article>
+    <article class="card"><div class="card-thumb">🍓<button class="heart">♡</button></div><div class="card-body"><div class="card-name">Strawberry Green</div><div class="card-desc">Sencha · strawberry</div><div class="toppings-preview"><span class="topping-pill">+ pudding</span></div><div class="card-foot"><span class="price">$5.60</span><button class="add">Add +</button></div></div></article>
+    <article class="card"><div class="card-thumb">🍋<button class="heart">♡</button></div><div class="card-body"><div class="card-name">Yuzu Citrus</div><div class="card-desc">Yuzu · honey · jasmine</div><div class="toppings-preview"><span class="topping-pill">no caffeine</span></div><div class="card-foot"><span class="price">$5.80</span><button class="add">Add +</button></div></div></article>
+    <article class="card" style="background:linear-gradient(135deg,#FFF7D6,#FFE9B0);border-style:dashed"><div class="card-thumb" style="background:transparent">🎁</div><div class="card-body"><div class="card-name">Mystery Bloom</div><div class="card-desc">We pick toppings — surprise!</div><div class="card-foot"><span class="price">$6.00</span><button class="add">Surprise +</button></div></div></article>
+  </div>
+</section>
+
+<div class="bundle">
+  <div class="bundle-ics"><span class="bundle-ic">🧋</span><span class="bundle-ic">🍓</span><span class="bundle-ic">🍠</span></div>
+  <div><div class="bundle-text">Complete your bouquet — add 1 more</div><div class="bundle-sub">3 for $15 · you have 2 · add Yuzu or Hojicha?</div></div>
+  <button class="bundle-cta">Add →</button>
+</div>
+
+<section class="section" aria-labelledby="sec-milk">
+  <div class="section-head"><h2 id="sec-milk" class="section-title">Fresh & Cheese</h2><a class="section-link">See all →</a></div>
+  <div class="bento">
+    <article class="card"><div class="card-thumb">☕<button class="heart">♡</button></div><div class="card-body"><div class="card-name">Hojicha Latte</div><div class="card-desc">Roasted · brown sugar</div><div class="card-foot"><span class="price">$5.40</span><button class="add">Add +</button></div></div></article>
+    <article class="card"><div class="card-thumb">🥛<button class="heart">♡</button></div><div class="card-body"><div class="card-name">Okinawa Milk</div><div class="card-desc">Kokuto · no tea</div><div class="card-foot"><span class="price">$4.90</span><button class="add">Add +</button></div></div></article>
+    <article class="card"><div class="card-thumb">🧀<button class="heart">♡</button></div><div class="card-body"><div class="card-name">Uji Cheese</div><div class="card-desc">Salted cream · matcha</div><div class="toppings-preview"><span class="topping-pill">cheese cap</span></div><div class="card-foot"><span class="price">$6.20</span><button class="add add--ghost">Added ✓</button></div></div></article>
+    <article class="card"><div class="card-thumb">🍧<button class="heart">♡</button></div><div class="card-body"><div class="card-name">Taro Cloud Slush</div><div class="card-desc">Taro snow · cheese cloud</div><div class="card-foot"><span class="price">$6.80</span><button class="add">Add +</button></div></div></article>
+  </div>
+</section>
+
+<div class="sticky">
+  <div class="sticky-card">
+    <div style="flex:1">
+      <div class="sticky-total">2 blooms · $10.70 · 1 more to bouquet save $3</div>
+      <div class="progress"><div class="fill"></div></div>
+      <div class="sticky-sub">Tap toppings above to customize — mix 3 toppings $2.00</div>
+    </div>
+  </div>
+  <button class="sticky-cta">Checkout $10.70</button>
+</div>
+
+</body>
+</html>

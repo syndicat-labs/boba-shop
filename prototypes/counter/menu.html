@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en" data-theme="boba-counter">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>COUNTER — Menu / Boba Shop</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --boba-color-bg:#F8F7F5;--boba-color-bg-subtle:#EFEDE9;--boba-color-bg-elevated:#FFFFFF;--boba-color-bg-inverse:#141310;
+  --boba-color-text:#141310;--boba-color-text-muted:#7A756E;--boba-color-text-inverse:#fff;--boba-color-text-faint:#A8A29A;
+  --boba-color-border:#E7E2DA;--boba-color-border-strong:#141310;--boba-color-accent:#141310;--boba-color-accent-text:#fff;
+  --boba-color-card-bg:#FFFFFF;--boba-color-card-border:#E7E2DA;--boba-color-chip-bg:#FFFFFF;--boba-color-chip-active-bg:#141310;--boba-color-chip-active-text:#fff;
+  --boba-font-display:'Inter',system-ui,sans-serif;--boba-font-body:'Inter',system-ui,sans-serif;--boba-font-mono:'JetBrains Mono',monospace;
+  --boba-radius-sm:6px;--boba-radius-md:10px;--boba-radius-lg:10px;--boba-radius-pill:999px;
+  --boba-shadow-sm:0 1px 2px rgba(20,19,16,0.06);--boba-shadow-md:0 4px 14px rgba(20,19,16,0.08);
+  --boba-ease:cubic-bezier(0.2,0,0,1);--boba-dur:160ms;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--boba-font-body);background:var(--boba-color-bg);color:var(--boba-color-text);max-width:390px;margin:0 auto;min-height:100dvh;-webkit-font-smoothing:antialiased}
+button{font:inherit}
+:focus-visible{outline:2px solid var(--boba-color-border-strong);outline-offset:2px}
+
+/* header — commerce, high trust, utility first */
+.header{position:sticky;top:0;z-index:20;background:rgba(248,247,245,0.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--boba-color-border);padding:10px 16px;display:flex;align-items:center;gap:12px}
+.brand{font-weight:800;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.brand-mark{width:28px;height:28px;border:1px solid var(--boba-color-border-strong);display:grid;place-items:center;font-size:12px;border-radius:var(--boba-radius-sm)}
+.meta{font-size:11px;color:var(--boba-color-text-muted);display:flex;gap:8px;align-items:center}
+.dot{width:6px;height:6px;background:#0E7A3A;border-radius:50%;box-shadow:0 0 0 4px rgba(14,122,58,0.12)}
+.header-right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.icon-btn{width:34px;height:34px;border:1px solid var(--boba-color-border);background:var(--boba-color-bg-elevated);display:grid;place-items:center;border-radius:var(--boba-radius-sm);cursor:pointer}
+.cart-btn{position:relative;border-color:var(--boba-color-border-strong);padding:0 10px;width:auto;gap:6px;font-size:12px;font-weight:700;border-radius:var(--boba-radius-pill)}
+.cart-count{font-family:var(--boba-font-mono);background:var(--boba-color-border-strong);color:#fff;padding:2px 6px;border-radius:var(--boba-radius-pill);font-size:11px}
+
+/* trust bar + proof */
+.trust{margin:10px 16px 0;background:var(--boba-color-bg-elevated);border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-md);padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.trust-item{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--boba-color-text-muted)}
+.trust-ic{width:28px;height:28px;background:var(--boba-color-bg-subtle);border:1px solid var(--boba-color-border);display:grid;place-items:center;border-radius:var(--boba-radius-sm);font-size:12px}
+.trust-item strong{color:var(--boba-color-text);font-weight:600}
+.proof{margin:10px 16px 0;background:#141310;color:#F8F7F5;border-radius:var(--boba-radius-md);padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.proof-left{font-size:11px;line-height:1.4}
+.proof-left strong{font-weight:700}
+.proof-right{font-family:var(--boba-font-mono);font-size:11px;opacity:0.8;white-space:nowrap}
+
+/* deal banner — not flashy, but price-led */
+.deal{margin:10px 16px 0;border:1px solid var(--boba-color-border-strong);background:#fff;border-radius:var(--boba-radius-md);display:flex;overflow:hidden}
+.deal-left{flex:1;padding:12px 14px}
+.deal-kicker{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--boba-color-text-muted);font-weight:600}
+.deal-title{font-size:13px;font-weight:700;margin-top:4px}
+.deal-sub{font-size:11px;color:var(--boba-color-text-muted);margin-top:3px;line-height:1.4}
+.deal-price{font-family:var(--boba-font-mono);font-size:12px;margin-top:8px;display:flex;gap:8px;align-items:center}
+.deal-old{text-decoration:line-through;color:var(--boba-color-text-faint)}
+.deal-new{font-weight:700;background:var(--boba-color-border-strong);color:#fff;padding:2px 6px;border-radius:var(--boba-radius-sm)}
+.deal-right{width:96px;background:var(--boba-color-bg-subtle);display:grid;place-items:center;font-size:32px;border-left:1px solid var(--boba-color-border)}
+.deal-cta{margin-top:10px;border:1px solid var(--boba-color-border-strong);background:var(--boba-color-border-strong);color:#fff;padding:8px 12px;border-radius:var(--boba-radius-pill);font-size:11px;font-weight:700;letter-spacing:0.04em;cursor:pointer}
+
+/* search + filter */
+.controls{padding:12px 16px 0;display:flex;gap:8px}
+.search{flex:1;display:flex;align-items:center;gap:8px;border:1px solid var(--boba-color-border);background:var(--boba-color-bg-elevated);border-radius:var(--boba-radius-sm);padding:9px 10px}
+.search input{flex:1;border:0;outline:0;background:transparent;font-size:13px}
+.search input::placeholder{color:var(--boba-color-text-faint)}
+.filter{padding:8px 12px;border:1px solid var(--boba-color-border);background:var(--boba-color-bg-elevated);border-radius:var(--boba-radius-sm);font-size:12px;font-weight:600;cursor:pointer}
+
+/* chips — high density, no emoji */
+.chips{padding:10px 16px 0;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;padding:6px 10px;border-radius:var(--boba-radius-pill);border:1px solid var(--boba-color-border);background:var(--boba-color-chip-bg);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap}
+.chip[aria-selected="true"]{background:var(--boba-color-chip-active-bg);color:var(--boba-color-chip-active-text);border-color:var(--boba-color-chip-active-bg)}
+.chip sup{font-family:var(--boba-font-mono);font-size:9px;margin-left:4px;opacity:0.7}
+
+/* section — dense, border-rule rhythm, price-led */
+.section{padding:18px 16px 0}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--boba-color-border);padding-bottom:8px;margin-bottom:10px;gap:12px}
+.section-title{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;font-weight:700}
+.section-meta{font-size:11px;color:var(--boba-color-text-muted);display:flex;gap:12px}
+.section-meta a{font-weight:600;color:var(--boba-color-text);cursor:pointer}
+
+/* counter cards — horizontal, fast scan, stepper */
+.list{display:flex;flex-direction:column;gap:8px}
+.c-card{display:grid;grid-template-columns:64px 1fr auto;gap:10px;padding:10px;border:1px solid var(--boba-color-card-border);border-radius:var(--boba-radius-md);background:var(--boba-color-card-bg);align-items:center}
+.c-card--in{border-color:var(--boba-color-border-strong);background:#fff;box-shadow:0 0 0 1px var(--boba-color-border-strong)}
+.thumb{width:64px;height:64px;border-radius:var(--boba-radius-sm);background:var(--boba-color-bg-subtle);border:1px solid var(--boba-color-border);display:grid;place-items:center;font-size:22px}
+.main{min-width:0}
+.name{font-size:13px;font-weight:700;line-height:1.2}
+.desc{font-size:11px;color:var(--boba-color-text-muted);line-height:1.3;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta-row{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;align-items:center}
+.pill{font-size:10px;padding:3px 6px;border-radius:var(--boba-radius-pill);border:1px solid var(--boba-color-border);color:var(--boba-color-text-muted);background:var(--boba-color-bg-subtle)}
+.pill--dark{background:var(--boba-color-border-strong);color:#fff;border-color:var(--boba-color-border-strong);font-weight:600}
+.pill--green{background:#E8F5E9;border-color:#A5D6A7;color:#1B5E20;font-weight:600}
+.stars{font-size:10px;letter-spacing:0.02em;color:var(--boba-color-text-muted)}
+.stars strong{color:var(--boba-color-text)}
+.side{display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:84px}
+.price{font-family:var(--boba-font-mono);font-size:13px;font-weight:700}
+.add{border:1px solid var(--boba-color-border-strong);background:#fff;padding:7px 12px;border-radius:var(--boba-radius-pill);font-size:11px;font-weight:700;cursor:pointer;min-width:64px;text-align:center}
+.add:hover{background:var(--boba-color-border-strong);color:#fff}
+.add--in{background:var(--boba-color-border-strong);color:#fff}
+.stepper{display:flex;align-items:center;gap:6px;border:1px solid var(--boba-color-border-strong);border-radius:var(--boba-radius-pill);padding:3px;background:#fff}
+.stepper button{width:26px;height:26px;border-radius:50%;border:0;background:var(--boba-color-bg-subtle);font-weight:800;cursor:pointer;display:grid;place-items:center}
+.stepper span{font-family:var(--boba-font-mono);font-size:12px;font-weight:700;min-width:14px;text-align:center}
+
+/* reorder — one-tap */
+.reorder{margin:14px 16px 0;border:1px dashed var(--boba-color-border);border-radius:var(--boba-radius-md);padding:12px;display:flex;align-items:center;gap:12px;background:var(--boba-color-bg-elevated)}
+.reorder-ic{width:36px;height:36px;border-radius:var(--boba-radius-sm);background:var(--boba-color-bg-subtle);border:1px solid var(--boba-color-border);display:grid;place-items:center}
+.reorder-title{font-size:12px;font-weight:700}
+.reorder-sub{font-size:11px;color:var(--boba-color-text-muted);margin-top:2px}
+.reorder-cta{margin-left:auto;border:1px solid var(--boba-color-border-strong);background:#fff;padding:8px 12px;border-radius:var(--boba-radius-pill);font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap}
+
+/* summary sticky — checkout-forward */
+.sticky{position:sticky;bottom:0;background:var(--boba-color-bg);border-top:1px solid var(--boba-color-border);padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:flex;gap:10px;align-items:center;margin-top:12px}
+.summary{flex:1;border:1px solid var(--boba-color-border);background:var(--boba-color-bg-elevated);border-radius:var(--boba-radius-md);padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.summary-left{font-size:11px;color:var(--boba-color-text-muted);line-height:1.4}
+.summary-left strong{color:var(--boba-color-text);font-family:var(--boba-font-mono);font-size:12px}
+.progress{height:4px;background:var(--boba-color-bg-subtle);border-radius:var(--boba-radius-pill);overflow:hidden;margin-top:6px;border:1px solid var(--boba-color-border)}
+.fill{height:100%;width:71%;background:var(--boba-color-border-strong)}
+.cta{border:1px solid var(--boba-color-border-strong);background:var(--boba-color-border-strong);color:#fff;padding:12px 18px;border-radius:var(--boba-radius-pill);font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap}
+.cta small{font-weight:400;opacity:0.8;margin-left:6px}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="brand"><span class="brand-mark">◈</span> Counter Boba</div>
+  <div class="meta"><span class="dot"></span> Open · 12:00–22:00 · 4.9 ★ (1.2k)</div>
+  <div class="header-right">
+    <button class="icon-btn" aria-label="Search">⌕</button>
+    <button class="cart-btn">Cart <span class="cart-count">2 · $10.70</span></button>
+  </div>
+</header>
+
+<div class="trust">
+  <div class="trust-item"><span class="trust-ic">✓</span><span><strong>Pickup 8–12 min</strong> · Avg 10 min</span></div>
+  <div class="trust-item"><span class="trust-ic">♡</span><span><strong>Free topping</strong> at $18</span></div>
+</div>
+
+<div class="proof">
+  <div class="proof-left"><strong>Most ordered this week:</strong> Brown Sugar Boba — 247 orders · Taro #2<br/><span style="opacity:0.8">Updated hourly · social proof drives choice</span></div>
+  <div class="proof-right">1.2k reviews</div>
+</div>
+
+<div class="deal">
+  <div class="deal-left">
+    <div class="deal-kicker">Bundle — save $2.40</div>
+    <div class="deal-title">Any 2 + topping = $1 off each drink</div>
+    <div class="deal-sub">Mix Brown Sugar, Taro, Yuzu. Auto-applied at cart. No code.</div>
+    <div class="deal-price"><span class="deal-old">$6.70</span><span class="deal-new">$5.70 each</span><span style="font-size:11px;color:var(--boba-color-text-muted)">· bundle</span></div>
+    <button class="deal-cta">Add bundle →</button>
+  </div>
+  <div class="deal-right">🧋</div>
+</div>
+
+<div class="controls">
+  <label class="search"><span style="color:var(--boba-color-text-faint)">⌕</span><input placeholder="Search — brown sugar, taro, yuzu…"/><span style="font-family:var(--boba-font-mono);font-size:10px;color:var(--boba-color-text-faint)">/</span></label>
+  <button class="filter">Filters</button>
+</div>
+
+<nav class="chips" role="tablist" aria-label="Categories">
+  <button class="chip" role="tab" aria-selected="true">All <sup>12</sup></button>
+  <button class="chip" role="tab" aria-selected="false">Classic <sup>4</sup></button>
+  <button class="chip" role="tab" aria-selected="false">Fruit Tea <sup>3</sup></button>
+  <button class="chip" role="tab" aria-selected="false">Fresh Milk <sup>2</sup></button>
+  <button class="chip" role="tab" aria-selected="false">Cheese Foam <sup>2</sup></button>
+  <button class="chip" role="tab" aria-selected="false">Slush <sup>1</sup></button>
+</nav>
+
+<div class="reorder">
+  <div class="reorder-ic">↻</div>
+  <div><div class="reorder-title">Reorder in one tap</div><div class="reorder-sub">Brown Sugar Boba · 50% sugar · less ice · pearls</div></div>
+  <button class="reorder-cta">Add $5.90 →</button>
+</div>
+
+<section class="section" aria-labelledby="sec-classic">
+  <div class="section-head"><h2 id="sec-classic" class="section-title">Classic Milk Tea</h2><div class="section-meta"><span>4 items</span><a>View all →</a></div></div>
+  <div class="list">
+    <article class="c-card c-card--in">
+      <div class="thumb">🧋</div>
+      <div class="main"><div class="name">Brown Sugar Boba</div><div class="desc">Muscovado · 4h pearls · Straus milk</div><div class="meta-row"><span class="pill pill--dark">#1 Best seller</span><span class="stars"><strong>4.9</strong> (312) · 247 today</span></div></div>
+      <div class="side"><div class="price">$5.90</div><div class="stepper"><button>-</button><span>1</span><button>+</button></div></div>
+    </article>
+    <article class="c-card c-card--in">
+      <div class="thumb">🍵</div>
+      <div class="main"><div class="name">Classic Pearl</div><div class="desc">Assam · cane sugar · tapioca</div><div class="meta-row"><span class="pill pill--green">✓ In cart</span><span class="stars"><strong>4.7</strong> (189)</span></div></div>
+      <div class="side"><div class="price">$4.50</div><div class="stepper"><button>-</button><span>1</span><button>+</button></div></div>
+    </article>
+    <article class="c-card">
+      <div class="thumb">🍠</div>
+      <div class="main"><div class="name">Taro Milk</div><div class="desc">Real taro · no powder · lightly sweet</div><div class="meta-row"><span class="pill">Popular</span><span class="stars"><strong>4.8</strong> (204)</span><span class="pill">+$0.80 oat</span></div></div>
+      <div class="side"><div class="price">$5.20</div><button class="add">Add</button></div>
+    </article>
+    <article class="c-card">
+      <div class="thumb">🍃</div>
+      <div class="main"><div class="name">Matcha Latte</div><div class="desc">Uji ceremonial · oat default</div><div class="meta-row"><span class="pill">Low sugar</span><span class="stars"><strong>4.6</strong> (96)</span></div></div>
+      <div class="side"><div class="price">$5.40</div><button class="add">Add</button></div>
+    </article>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="sec-fruit">
+  <div class="section-head"><h2 id="sec-fruit" class="section-title">Fruit Tea</h2><div class="section-meta"><span>3 items</span><a>View all →</a></div></div>
+  <div class="list">
+    <article class="c-card"><div class="thumb">🥭</div><div class="main"><div class="name">Mango Pomelo Sago</div><div class="desc">Fresh mango · pomelo · coconut</div><div class="meta-row"><span class="pill">Seasonal</span><span class="stars"><strong>4.8</strong> (88)</span></div></div><div class="side"><div class="price">$6.20</div><button class="add">Add</button></div></article>
+    <article class="c-card"><div class="thumb">🍓</div><div class="main"><div class="name">Strawberry Green Tea</div><div class="desc">Sencha · strawberry · aloe opt.</div><div class="meta-row"><span class="pill">Aloe +$0.80</span></div></div><div class="side"><div class="price">$5.60</div><button class="add">Add</button></div></article>
+    <article class="c-card"><div class="thumb">🍋</div><div class="main"><div class="name">Yuzu Citrus</div><div class="desc">Yuzu · honey · jasmine</div><div class="meta-row"><span class="pill">Caffeine-free</span><span class="stars"><strong>4.7</strong> (74)</span></div></div><div class="side"><div class="price">$5.80</div><button class="add">Add</button></div></article>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="sec-milk">
+  <div class="section-head"><h2 id="sec-milk" class="section-title">Fresh Milk</h2><div class="section-meta"><span>4 items</span></div></div>
+  <div class="list">
+    <article class="c-card"><div class="thumb">☕</div><div class="main"><div class="name">Hojicha Latte</div><div class="desc">Roasted hojicha · brown sugar pearls</div><div class="meta-row"><span class="pill">Hot opt.</span><span class="stars"><strong>4.6</strong> (63)</span></div></div><div class="side"><div class="price">$5.40</div><button class="add">Add</button></div></article>
+    <article class="c-card"><div class="thumb">🥛</div><div class="main"><div class="name">Okinawa Milk</div><div class="desc">Kokuto · fresh milk · no tea</div><div class="meta-row"><span class="pill">Kid-friendly</span></div></div><div class="side"><div class="price">$4.90</div><button class="add">Add</button></div></article>
+    <article class="c-card"><div class="thumb">🧀</div><div class="main"><div class="name">Uji Matcha Cheese</div><div class="desc">Salted cream · matcha · #1 cheese</div><div class="meta-row"><span class="pill pill--dark">Popular</span><span class="stars"><strong>4.8</strong> (142)</span></div></div><div class="side"><div class="price">$6.20</div><button class="add">Add</button></div></article>
+    <article class="c-card"><div class="thumb">🍂</div><div class="main"><div class="name">Brown Sugar Cheese</div><div class="desc">Cheese cap · brown sugar boba</div><div class="meta-row"><span class="pill">+$0.80 foam</span></div></div><div class="side"><div class="price">$6.50</div><button class="add">Add</button></div></article>
+    <article class="c-card"><div class="thumb">🍧</div><div class="main"><div class="name">Taro Cloud Slush</div><div class="desc">Taro snow · cheese cloud · pearls</div><div class="meta-row"><span class="pill">Limited</span><span class="stars"><strong>4.7</strong> (51)</span></div></div><div class="side"><div class="price">$6.80</div><button class="add">Add</button></div></article>
+  </div>
+</section>
+
+<div class="sticky">
+  <div class="summary">
+    <div style="flex:1">
+      <div class="summary-left"><strong>2 items</strong> · $10.70 · <span style="color:#0E7A3A">bundle saves $1</span><div class="progress"><div class="fill"></div></div></div>
+      <div style="font-size:10px;color:var(--boba-color-text-muted);margin-top:4px">Add $7.30 → free topping · tap to configure sugar/ice/size</div>
+    </div>
+  </div>
+  <button class="cta">Checkout <small>$10.70</small></button>
+</div>
+
+</body>
+</html>

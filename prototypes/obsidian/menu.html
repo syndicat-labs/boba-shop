@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en" data-theme="boba-obsidian">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light" />
+<title>OBSIDIAN — Menu / Boba Shop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --boba-color-bg:#ffffff;--boba-color-bg-subtle:#f4f4f3;--boba-color-bg-elevated:#ffffff;--boba-color-bg-inverse:#0a0a0a;
+  --boba-color-text:#0a0a0a;--boba-color-text-muted:#6b6b6b;--boba-color-text-inverse:#ffffff;--boba-color-text-faint:#9a9a9a;
+  --boba-color-border:#e7e7e4;--boba-color-border-strong:#0a0a0a;--boba-color-accent:#0a0a0a;--boba-color-accent-text:#ffffff;
+  --boba-color-card-bg:#ffffff;--boba-color-card-border:#e7e7e4;--boba-color-chip-bg:#ffffff;
+  --boba-color-chip-active-bg:#0a0a0a;--boba-color-chip-active-text:#ffffff;
+  --boba-font-display:'Inter',system-ui,sans-serif;--boba-font-body:'Inter',system-ui,sans-serif;--boba-font-mono:'JetBrains Mono',monospace;
+  --boba-radius-sm:4px;--boba-radius-md:6px;--boba-radius-lg:8px;--boba-radius-pill:999px;
+  --boba-shadow-sm:none;--boba-shadow-md:none;--boba-space-1:4px;--boba-space-2:8px;--boba-space-3:12px;--boba-space-4:16px;--boba-space-5:20px;--boba-space-6:24px;
+  --boba-duration-fast:150ms;--boba-ease:cubic-bezier(0.2,0,0,1);
+}
+*{box-sizing:border-box;margin:0;padding:0;max-width:100%}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:clip;max-width:100vw}
+body{
+  font-family:var(--boba-font-body);background:var(--boba-color-bg);color:var(--boba-color-text);
+  -webkit-font-smoothing:antialiased;width:100%;max-width:min(100vw, 390px);margin:0 auto;min-height:100dvh;min-height:100svh;
+  border-left:1px solid var(--boba-color-border);border-right:1px solid var(--boba-color-border);overflow-x:clip;
+}
+@media (max-width:392px){body{border-left:none;border-right:none}}
+button{font:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--boba-color-border-strong);outline-offset:2px}
+img{max-width:100%;height:auto}
+.header, .meta-bar, .banner, .section, .menu-list, .footer, .bottom-nav{max-width:100%;box-sizing:border-box}
+.header, .live-checkout, .live-price, .brand, .brand-text, .menu-row, .menu-main, .menu-side{ min-width:0; }
+
+/* header — logo+brand+time left, live checkout price view right (replaces icons) */
+.header{
+  position:sticky;top:0;z-index:20;background:var(--boba-color-bg);border-bottom:1px solid var(--boba-color-border);
+  display:flex;align-items:center;justify-content:space-between;padding:10px 12px 10px 16px;gap:12px;
+}
+.brand{display:flex;align-items:center;gap:8px;min-width:0;flex:0 1 132px;max-width:132px}
+.brand-mark{width:28px;height:28px;background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse);display:grid;place-items:center;font-weight:800;font-size:12px;letter-spacing:0.06em;border-radius:var(--boba-radius-sm);flex-shrink:0}
+.brand-text{line-height:1;min-width:0;flex:1 1 auto;display:flex;align-items:center;min-height:28px}
+.brand-name{font-weight:800;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1}
+/* live checkout price view — widened for price buildup, brand reduced as requested */
+.live-checkout{
+  display:flex;align-items:stretch;border:1px solid var(--boba-color-border-strong);border-radius:var(--boba-radius-sm);
+  overflow:hidden;flex:1 1 auto;height:36px;max-width:none;margin-left:4px;
+}
+.live-price{
+  display:flex;flex-direction:column;justify-content:center;padding:0 10px;min-width:0;flex:1 1 auto;
+  border-right:1px solid var(--boba-color-border-strong);background:var(--boba-color-bg);gap:1px;overflow:hidden;
+}
+.live-price-count{font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--boba-color-text-muted);line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.live-price-val{font-family:var(--boba-font-mono);font-size:14px;font-weight:700;letter-spacing:-0.02em;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.live-price-val--empty{color:var(--boba-color-text-muted);font-weight:500}
+.live-cta{
+  display:flex;align-items:center;gap:4px;padding:0 14px;background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse);
+  border:0;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;font-weight:700;cursor:pointer;white-space:nowrap;flex:0 0 auto;transition:opacity var(--boba-duration-fast) var(--boba-ease);
+}
+.live-cta:disabled{opacity:0.35;cursor:default}
+.live-cta:not(:disabled):hover{opacity:0.88}
+.live-cta:not(:disabled):active{opacity:0.76}
+
+/* shop meta bar */
+.meta-bar{
+  display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--boba-color-border);
+  background:var(--boba-color-bg-subtle);gap:12px
+}
+.meta-left{display:flex;align-items:center;gap:10px}
+.meta-dot{width:6px;height:6px;background:#16a34a;border-radius:50%;box-shadow:0 0 0 4px rgba(22,163,74,0.12)}
+.meta-status{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;font-weight:600}
+.meta-right{font-size:11px;color:var(--boba-color-text-muted);font-family:var(--boba-font-mono)}
+.meta-sep{width:1px;height:14px;background:var(--boba-color-border)}
+
+/* banner — the ONE dark surface */
+.banner{
+  margin:12px 16px 0;background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse);
+  border-radius:var(--boba-radius-md);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.banner-left{display:flex;flex-direction:column;gap:2px}
+.banner-kicker{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;opacity:0.6}
+.banner-title{font-size:13px;font-weight:700;letter-spacing:0.02em}
+.banner-cta{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;border:1px solid rgba(255,255,255,0.22);padding:8px 12px;border-radius:var(--boba-radius-sm);background:transparent;color:var(--boba-color-text-inverse);cursor:pointer;white-space:nowrap}
+.banner-cta:hover{background:rgba(255,255,255,0.08)}
+
+/* chips removed — All filter deleted per request */
+
+/* sections */
+.section{padding:16px 16px 0}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--boba-color-border);padding-bottom:10px;margin-bottom:12px;gap:12px}
+.section-title{font-size:12px;letter-spacing:0.14em;text-transform:uppercase;font-weight:700}
+.section-count{font-family:var(--boba-font-mono);font-size:11px;color:var(--boba-color-text-muted)}
+
+/* menu — obsidian bordered row list, hairline, high density — all cards have 2/3 faded image, 3px separation */
+.menu-list{display:flex;flex-direction:column;gap:3px;border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-md);overflow:hidden;max-width:100%;box-sizing:border-box;background:var(--boba-color-border)}
+.menu-row{
+  display:grid;grid-template-columns:80px minmax(0,1fr) auto;gap:12px;padding:12px 12px 12px 16px;align-items:center;
+  border-bottom:none;background:var(--boba-color-card-bg);transition:background var(--boba-duration-fast) var(--boba-ease);max-width:100%;box-sizing:border-box;overflow:hidden;
+  position:relative;overflow:hidden;isolation:isolate;min-height:104px;
+}
+.menu-row:last-child{border-bottom:0}
+.menu-row:not(.menu-row--in):hover{background:var(--boba-color-card-bg)}
+.menu-row--in{background:var(--boba-color-card-bg)}
+.menu-thumb{display:grid;width:80px;height:80px;border-radius:0;overflow:hidden;border:none;background:transparent;position:relative;z-index:1;align-self:center;flex-shrink:0}
+.menu-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.menu-main{min-width:0;position:relative;z-index:1}
+.menu-name{font-size:13px;font-weight:700;letter-spacing:-0.01em;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.menu-desc{font-size:11px;color:var(--boba-color-text-muted);line-height:1.4;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.menu-badges{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
+.badge{font-size:7.5px;letter-spacing:0.06em;text-transform:uppercase;padding:2px 5px;border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-pill);color:var(--boba-color-text-muted);background:var(--boba-color-bg);line-height:1.2}
+.badge--accent{border-color:var(--boba-color-border-strong);color:var(--boba-color-text);font-weight:600}
+.menu-side{display:flex;flex-direction:column;align-items:flex-end;gap:8px;position:relative;z-index:1}
+.menu-price{font-family:var(--boba-font-mono);font-size:13px;font-weight:600;letter-spacing:-0.02em}
+.menu-bg{position:absolute;left:0;top:0;bottom:0;width:86%;overflow:hidden;pointer-events:none;z-index:0}
+.menu-bg img{width:100%;height:100%;object-fit:cover;display:block;opacity:0.58}
+.menu-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg, rgba(255,255,255,0) 52%, rgba(255,255,255,0.82) 78%, var(--boba-color-card-bg) 96%)}
+.menu-add{width:36px;height:36px;min-width:36px;min-height:36px;border:1px solid var(--boba-color-border-strong);background:var(--boba-color-bg);display:grid;place-items:center;border-radius:var(--boba-radius-sm);cursor:pointer;font-size:16px;line-height:1}
+.menu-add:hover{background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse)}
+.menu-add:active{transform:scale(0.96)}
+.menu-add[aria-pressed="true"]{background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse)}
+.qty{display:flex;align-items:center;gap:6px}
+.qty-btn{width:36px;height:36px;min-width:36px;min-height:36px;border:1px solid var(--boba-color-border-strong);background:var(--boba-color-bg);display:grid;place-items:center;border-radius:var(--boba-radius-sm);cursor:pointer;font-size:14px;line-height:1}
+.qty-btn:hover{background:var(--boba-color-bg-subtle)}
+.qty-val{font-family:var(--boba-font-mono);font-size:12px;font-weight:600;min-width:16px;text-align:center}
+.menu-row--featured::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--boba-color-border-strong);z-index:2}
+.menu-featured-bg{display:none}
+
+/* footer */
+.footer{padding:16px;border-top:1px solid var(--boba-color-border);margin-top:16px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.footer-note{font-size:11px;color:var(--boba-color-text-muted);line-height:1.5}
+.footer-note strong{color:var(--boba-color-text);font-weight:600}
+.bottom-nav{position:sticky;bottom:0;background:var(--boba-color-bg);border-top:1px solid var(--boba-color-border);display:flex;justify-content:space-around;padding:8px 0 calc(8px + env(safe-area-inset-bottom));margin-top:12px}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--boba-color-text-muted);cursor:pointer;padding:4px 16px}
+.nav-item--active{color:var(--boba-color-text);font-weight:600}
+.nav-icon{width:20px;height:20px;display:grid;place-items:center;font-size:14px}
+[hidden]{display:none !important}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* mobile-friendly breakpoints */
+@media (max-width:380px){
+  .header{padding:8px 10px;gap:8px}
+  .brand{max-width:112px;gap:6px}
+  .brand-mark{width:26px;height:26px;font-size:11px}
+  .brand-name{font-size:11px;letter-spacing:0.10em}
+  .live-checkout{height:34px}
+  .live-price{padding:0 8px}
+  .live-cta{padding:0 10px;font-size:10px}
+  .meta-bar{padding:8px 12px}
+  .banner{margin:10px 12px 0;padding:12px 14px}
+  .section{padding:12px 12px 0}
+  .menu-row{grid-template-columns:72px minmax(0,1fr) auto;gap:8px;padding:10px;min-height:96px}
+  .menu-thumb{width:72px;height:72px}
+  .footer{padding:12px;flex-direction:column;align-items:flex-start}
+}
+@media (max-width:320px){
+  .header{padding:8px 8px;gap:6px}
+  .brand{max-width:98px}
+  .brand-name{font-size:10px;letter-spacing:0.08em}
+  .live-price-count{font-size:8px}
+  .live-price-val{font-size:12px}
+  .live-cta{padding:0 8px;font-size:10px}
+  .menu-row{grid-template-columns:64px minmax(0,1fr) auto;gap:6px;min-height:92px}
+  .menu-thumb{width:64px;height:64px}
+  .menu-name{font-size:12px}
+  .menu-desc{font-size:10px}
+}
+@media (min-width:391px){
+  body{box-shadow:0 0 0 1px var(--boba-color-border)}
+}
+</style>
+</head>
+<body>
+
+<header class="header" aria-label="App header">
+  <div class="brand">
+    <div class="brand-mark">◈</div>
+    <div class="brand-text">
+      <div class="brand-name">Boba · Obsidian</div>
+    </div>
+  </div>
+  <!-- live checkout price view — replaces search+cart icons -->
+  <div class="live-checkout" role="status" aria-live="polite" aria-label="Cart summary">
+    <div class="live-price">
+      <span class="live-price-count" id="liveCount">0 items</span>
+      <span class="live-price-val live-price-val--empty" id="liveTotal">₵0.00</span>
+    </div>
+    <button class="live-cta" id="liveCta" disabled aria-label="Checkout">Checkout →</button>
+  </div>
+</header>
+
+<div class="meta-bar">
+  <div class="meta-left"><span class="meta-dot" aria-hidden="true"></span><span class="meta-status">Open · Pickup</span></div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <span class="meta-right">~12 min</span><span class="meta-sep"></span><span class="meta-right">Min ₵8</span>
+  </div>
+</div>
+
+<div class="banner" role="region" aria-label="Promotion">
+  <div class="banner-left">
+    <div class="banner-kicker">House · Batch at :00 · :20 · :40</div>
+    <div class="banner-title">Brown Sugar — brewed Taichung way</div>
+  </div>
+  <button class="banner-cta" id="bannerView">View →</button>
+</div>
+
+<section class="section" aria-labelledby="sec-boba">
+  <div class="section-head">
+    <h2 id="sec-boba" class="section-title">Boba</h2>
+    <span class="section-count" id="sectionCount">06</span>
+  </div>
+  <div class="menu-list" id="menuList">
+    <article class="menu-row menu-row--featured" data-id="brown-sugar" data-name="Brown Sugar Boba" data-price="5.90">
+      <div class="menu-bg" aria-hidden="true"><img src="../../assets/boba/brownsugar.jpeg" alt="" loading="lazy" /></div>
+      <div class="menu-thumb" aria-hidden="true"><img src="../../assets/boba/brownsugarcropped.jpeg" alt="Brown Sugar Boba" loading="lazy" /></div>
+      <div class="menu-main">
+        <div class="menu-name">Brown Sugar Boba</div>
+        <div class="menu-desc">Muscovado syrup · 4h pearls · Straus milk</div>
+        <div class="menu-badges"><span class="badge badge--accent">Signature</span><span class="badge">Oat +₵0.80</span></div>
+      </div>
+      <div class="menu-side"><div class="menu-price">₵5.90</div><div class="qty" hidden><button class="qty-btn" data-action="dec" aria-label="Decrease Brown Sugar Boba">−</button><span class="qty-val">1</span><button class="qty-btn" data-action="inc" aria-label="Increase Brown Sugar Boba">+</button></div><button class="menu-add" aria-pressed="false" aria-label="Add Brown Sugar Boba">+</button></div>
+    </article>
+    <article class="menu-row" data-id="matcha" data-name="Matcha Boba" data-price="5.40">
+      <div class="menu-bg" aria-hidden="true"><img src="../../assets/boba/matcha.jpeg" alt="" loading="lazy" /></div>
+      <div class="menu-thumb"><img src="../../assets/boba/matcha.jpeg" alt="Matcha Boba" loading="lazy" /></div>
+      <div class="menu-main">
+        <div class="menu-name">Matcha Boba</div>
+        <div class="menu-desc">Uji ceremonial · oat milk · 0–100% sugar</div>
+        <div class="menu-badges"><span class="badge badge--accent">Low sugar</span></div>
+      </div>
+      <div class="menu-side"><div class="menu-price">₵5.40</div><div class="qty" hidden><button class="qty-btn" data-action="dec" aria-label="Decrease Matcha Boba">−</button><span class="qty-val">1</span><button class="qty-btn" data-action="inc" aria-label="Increase Matcha Boba">+</button></div><button class="menu-add" aria-pressed="false" aria-label="Add Matcha Boba">+</button></div>
+    </article>
+    <article class="menu-row" data-id="taro" data-name="Taro Boba" data-price="5.20">
+      <div class="menu-bg" aria-hidden="true"><img src="../../assets/boba/taro.jpeg" alt="" loading="lazy" /></div>
+      <div class="menu-thumb"><img src="../../assets/boba/taro.jpeg" alt="Taro Boba" loading="lazy" /></div>
+      <div class="menu-main">
+        <div class="menu-name">Taro Boba</div>
+        <div class="menu-desc">Real taro · no powder · lightly sweet</div>
+        <div class="menu-badges"><span class="badge">Vegan opt.</span></div>
+      </div>
+      <div class="menu-side"><div class="menu-price">₵5.20</div><div class="qty" hidden><button class="qty-btn" data-action="dec" aria-label="Decrease Taro Boba">−</button><span class="qty-val">1</span><button class="qty-btn" data-action="inc" aria-label="Increase Taro Boba">+</button></div><button class="menu-add" aria-pressed="false" aria-label="Add Taro Boba">+</button></div>
+    </article>
+    <article class="menu-row" data-id="coffee" data-name="Coffee Boba" data-price="5.60">
+      <div class="menu-bg" aria-hidden="true"><img src="../../assets/boba/coffee.jpeg" alt="" loading="lazy" /></div>
+      <div class="menu-thumb"><img src="../../assets/boba/coffee.jpeg" alt="Coffee Boba" loading="lazy" /></div>
+      <div class="menu-main">
+        <div class="menu-name">Coffee Boba</div>
+        <div class="menu-desc">Cold brew · brown sugar pearls · fresh milk</div>
+        <div class="menu-badges"><span class="badge">Strong</span></div>
+      </div>
+      <div class="menu-side"><div class="menu-price">₵5.60</div><div class="qty" hidden><button class="qty-btn" data-action="dec" aria-label="Decrease Coffee Boba">−</button><span class="qty-val">1</span><button class="qty-btn" data-action="inc" aria-label="Increase Coffee Boba">+</button></div><button class="menu-add" aria-pressed="false" aria-label="Add Coffee Boba">+</button></div>
+    </article>
+    <article class="menu-row" data-id="hongkong" data-name="Hong Kong Boba" data-price="5.50">
+      <div class="menu-bg" aria-hidden="true"><img src="../../assets/boba/hongkong.jpeg" alt="" loading="lazy" /></div>
+      <div class="menu-thumb"><img src="../../assets/boba/hongkong.jpeg" alt="Hong Kong Boba" loading="lazy" /></div>
+      <div class="menu-main">
+        <div class="menu-name">Hong Kong Boba</div>
+        <div class="menu-desc">HK milk tea · cane sugar · tapioca pearls</div>
+        <div class="menu-badges"><span class="badge">Classic</span></div>
+      </div>
+      <div class="menu-side"><div class="menu-price">₵5.50</div><div class="qty" hidden><button class="qty-btn" data-action="dec" aria-label="Decrease Hong Kong Boba">−</button><span class="qty-val">1</span><button class="qty-btn" data-action="inc" aria-label="Increase Hong Kong Boba">+</button></div><button class="menu-add" aria-pressed="false" aria-label="Add Hong Kong Boba">+</button></div>
+    </article>
+    <article class="menu-row" data-id="strawberry" data-name="Strawberry Boba" data-price="5.70">
+      <div class="menu-bg" aria-hidden="true"><img src="../../assets/boba/strawberry.jpeg" alt="" loading="lazy" /></div>
+      <div class="menu-thumb"><img src="../../assets/boba/strawberry.jpeg" alt="Strawberry Boba" loading="lazy" /></div>
+      <div class="menu-main">
+        <div class="menu-name">Strawberry Boba</div>
+        <div class="menu-desc">Fresh strawberry · jasmine green tea</div>
+        <div class="menu-badges"><span class="badge">Seasonal</span></div>
+      </div>
+      <div class="menu-side"><div class="menu-price">₵5.70</div><div class="qty" hidden><button class="qty-btn" data-action="dec" aria-label="Decrease Strawberry Boba">−</button><span class="qty-val">1</span><button class="qty-btn" data-action="inc" aria-label="Increase Strawberry Boba">+</button></div><button class="menu-add" aria-pressed="false" aria-label="Add Strawberry Boba">+</button></div>
+    </article>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-note"><strong>Build:</strong> sugar 0–100% · ice · size R/L · toppings ₵0.80<br/>Running total updates live in header. Delivery optional at checkout.</div>
+  <div style="font-family:var(--boba-font-mono);font-size:11px;color:var(--boba-color-text-muted)">6 items</div>
+</footer>
+
+<nav class="bottom-nav" aria-label="Primary">
+  <a class="nav-item nav-item--active"><span class="nav-icon">≡</span>Menu</a>
+  <a class="nav-item"><span class="nav-icon">♡</span>Favorites</a>
+  <a class="nav-item" id="bottomCart"><span class="nav-icon">⧉</span><span id="bottomCartLabel">Cart · ₵0.00</span></a>
+  <a class="nav-item"><span class="nav-icon">◈</span>Orders</a>
+</nav>
+
+<script>
+const cart = new Map();
+const liveCount = document.getElementById('liveCount');
+const liveTotal = document.getElementById('liveTotal');
+const liveCta = document.getElementById('liveCta');
+const bottomCartLabel = document.getElementById('bottomCartLabel');
+const menuList = document.getElementById('menuList');
+
+function fmt(n){ return '₵' + n.toFixed(2); }
+
+function sync(){
+  let count = 0, total = 0;
+  for(const [id,qty] of cart){
+    const row = menuList.querySelector(`[data-id="${id}"]`);
+    const price = parseFloat(row.dataset.price);
+    count += qty;
+    total += price * qty;
+  }
+  const label = count === 0 ? '0 items' : count === 1 ? '1 item' : count + ' items';
+  liveCount.textContent = label;
+  liveTotal.textContent = fmt(total);
+  liveTotal.classList.toggle('live-price-val--empty', count===0);
+  liveCta.disabled = count===0;
+  liveCta.textContent = 'Checkout →';
+  liveCta.setAttribute('aria-label', count===0 ? 'Checkout' : 'Checkout ' + fmt(total));
+  bottomCartLabel.textContent = 'Cart · ' + fmt(total);
+
+  for(const row of menuList.querySelectorAll('.menu-row')){
+    const id = row.dataset.id;
+    const qty = cart.get(id) || 0;
+    const addBtn = row.querySelector('.menu-add');
+    const qtyBox = row.querySelector('.qty');
+    const qtyVal = row.querySelector('.qty-val');
+    if(qty > 0){
+      row.classList.add('menu-row--in');
+      addBtn.hidden = true;
+      addBtn.setAttribute('aria-pressed','true');
+      qtyBox.hidden = false;
+      qtyVal.textContent = String(qty);
+    } else {
+      row.classList.remove('menu-row--in');
+      addBtn.hidden = false;
+      addBtn.setAttribute('aria-pressed','false');
+      qtyBox.hidden = true;
+    }
+  }
+}
+
+menuList.addEventListener('click', (e)=>{
+  const add = e.target.closest('.menu-add');
+  if(add){
+    const row = add.closest('.menu-row');
+    const id = row.dataset.id;
+    cart.set(id, (cart.get(id)||0) + 1);
+    sync();
+    return;
+  }
+  const btn = e.target.closest('.qty-btn');
+  if(btn){
+    const row = btn.closest('.menu-row');
+    const id = row.dataset.id;
+    const cur = cart.get(id)||0;
+    if(btn.dataset.action === 'inc') cart.set(id, cur+1);
+    else {
+      if(cur <= 1) cart.delete(id);
+      else cart.set(id, cur-1);
+    }
+    sync();
+  }
+});
+
+liveCta.addEventListener('click', ()=>{
+  if(cart.size===0) return;
+  let lines = [];
+  let total = 0;
+  for(const [id,qty] of cart){
+    const row = menuList.querySelector(`[data-id="${id}"]`);
+    const name = row.dataset.name;
+    const price = parseFloat(row.dataset.price);
+    lines.push(qty + '× ' + name + ' — ' + fmt(price*qty));
+    total += price*qty;
+  }
+  alert('Checkout — ' + lines.join('\\n') + '\\n\\nTotal: ' + fmt(total) + '\\n\\nDelivery optional next step.');
+});
+
+document.getElementById('bannerView').addEventListener('click', ()=>{
+  const el = menuList.querySelector('[data-id="brown-sugar"]');
+  if(el) el.scrollIntoView({behavior:'smooth', block:'center'});
+  el.style.outline = '1px solid var(--boba-color-border-strong)';
+  setTimeout(()=> el.style.outline='', 900);
+});
+
+sync();
+</script>
+
+</body>
+</html>

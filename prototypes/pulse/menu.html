@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en" data-theme="boba-pulse">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>PULSE — Menu / Boba Shop</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --boba-color-bg:#0B0B14;--boba-color-bg-subtle:#16162A;--boba-color-bg-elevated:#1A1A2E;--boba-color-bg-inverse:#FFFFFF;
+  --boba-color-text:#FFFFFF;--boba-color-text-muted:#9AA0C8;--boba-color-text-inverse:#0B0B14;--boba-color-text-faint:#6B6FA3;
+  --boba-color-border:#2A2A44;--boba-color-border-strong:#FFFFFF;--boba-color-accent:#FF3B5C;--boba-color-accent-text:#fff;
+  --boba-color-card-bg:#1A1A2E;--boba-color-card-border:#2A2A44;--boba-color-chip-bg:#1E1E3A;--boba-color-chip-active-bg:#FFFFFF;--boba-color-chip-active-text:#0B0B14;
+  --boba-font-display:'Space Grotesk','Inter',system-ui,sans-serif;--boba-font-body:'Inter',system-ui,sans-serif;--boba-font-mono:'JetBrains Mono',monospace;
+  --boba-radius-sm:8px;--boba-radius-md:12px;--boba-radius-lg:20px;--boba-radius-xl:24px;--boba-radius-pill:999px;
+  --boba-shadow-sm:0 2px 12px rgba(0,0,0,0.4);--boba-shadow-md:0 8px 28px rgba(0,0,0,0.5);--boba-shadow-lg:0 16px 48px rgba(255,59,92,0.22);
+  --boba-ease:cubic-bezier(0.34,1.56,0.64,1);--boba-dur:220ms;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--boba-font-body);background:var(--boba-color-bg);color:var(--boba-color-text);max-width:390px;margin:0 auto;min-height:100dvh;-webkit-font-smoothing:antialiased}
+button{font:inherit}
+:focus-visible{outline:2px solid #00E5CC;outline-offset:2px}
+
+/* header — dark, utility */
+.header{position:sticky;top:0;z-index:20;background:rgba(11,11,20,0.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--boba-color-border);padding:10px 14px;display:flex;align-items:center;gap:10px}
+.brand{width:36px;height:36px;border-radius:var(--boba-radius-sm);background:#fff;color:#0B0B14;display:grid;place-items:center;font-family:var(--boba-font-display);font-weight:700;font-size:14px}
+.header-main{flex:1;min-width:0}
+.header-title{font-family:var(--boba-font-display);font-weight:700;font-size:13px;letter-spacing:0.04em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.live-dot{width:7px;height:7px;background:#00E5CC;border-radius:50%;box-shadow:0 0 0 5px rgba(0,229,204,0.18);animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.15);opacity:0.9}}
+.header-sub{font-size:11px;color:var(--boba-color-text-muted);margin-top:2px;display:flex;gap:8px}
+.toggle{display:flex;background:var(--boba-color-bg-subtle);border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-pill);padding:2px;flex-shrink:0}
+.toggle button{padding:6px 12px;border-radius:var(--boba-radius-pill);border:0;background:transparent;color:var(--boba-color-text-muted);font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer}
+.toggle .on{background:#fff;color:#0B0B14;box-shadow:0 2px 8px rgba(0,0,0,0.25)}
+.cart-pill{width:38px;height:38px;border-radius:50%;background:var(--boba-color-accent);color:#fff;display:grid;place-items:center;position:relative;flex-shrink:0;border:0;cursor:pointer;box-shadow:0 6px 18px rgba(255,59,92,0.4)}
+.cart-count{position:absolute;top:-4px;right:-4px;background:#FFB800;color:#0B0B14;font-family:var(--boba-font-mono);font-size:10px;font-weight:700;min-width:18px;height:18px;display:grid;place-items:center;border-radius:var(--boba-radius-pill);border:2px solid #0B0B14}
+
+/* urgency bar — batch timer */
+.urgency{margin:10px 14px 0;background:linear-gradient(135deg,#FF3B5C 0%,#FF6B6B 60%,#FFB800 100%);border-radius:var(--boba-radius-md);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#fff;box-shadow:0 8px 24px rgba(255,59,92,0.35);position:relative;overflow:hidden}
+.urgency::after{content:"";position:absolute;right:-18px;top:-18px;width:90px;height:90px;background:rgba(255,255,255,0.14);border-radius:50%}
+.urgency-left{position:relative;z-index:1}
+.urgency-kicker{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:700;opacity:0.9;display:flex;align-items:center;gap:6px}
+.urgency-title{font-family:var(--boba-font-display);font-size:14px;font-weight:700;margin-top:3px;line-height:1.2}
+.urgency-sub{font-size:11px;opacity:0.92;margin-top:3px}
+.timer{position:relative;z-index:1;background:#0B0B14;color:#FFB800;border-radius:var(--boba-radius-sm);padding:8px 10px;text-align:center;min-width:86px}
+.timer-val{font-family:var(--boba-font-mono);font-size:18px;font-weight:800;letter-spacing:0.04em;line-height:1}
+.timer-lab{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;opacity:0.7;margin-top:2px}
+
+/* deal carousel */
+.deals{padding:12px 14px 0;display:flex;gap:10px;overflow-x:auto;scrollbar-width:none}
+.deals::-webkit-scrollbar{display:none}
+.deal{flex-shrink:0;width:188px;background:var(--boba-color-bg-elevated);border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-lg);padding:12px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden}
+.deal::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:linear-gradient(90deg,var(--boba-color-accent),#FFB800)}
+.deal-top{display:flex;align-items:center;gap:8px}
+.deal-ic{width:32px;height:32px;border-radius:50%;background:rgba(255,59,92,0.14);display:grid;place-items:center;font-size:14px}
+.deal-tag{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--boba-color-accent);font-weight:700}
+.deal-title{font-size:12px;font-weight:700;line-height:1.3}
+.deal-sub{font-size:11px;color:var(--boba-color-text-muted);line-height:1.4}
+.deal-cta{margin-top:2px;background:#fff;color:#0B0B14;border:0;padding:7px 10px;border-radius:var(--boba-radius-pill);font-size:11px;font-weight:800;cursor:pointer;width:fit-content}
+
+/* social proof strip */
+.proof{margin:12px 14px 0;background:var(--boba-color-bg-subtle);border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-md);padding:10px 12px;display:flex;align-items:center;gap:10px}
+.proof-avatars{display:flex}
+.proof-a{width:26px;height:26px;border-radius:50%;border:2px solid var(--boba-color-bg-subtle);margin-left:-7px;background:#2A2A44;display:grid;place-items:center;font-size:12px}
+.proof-a:first-child{margin-left:0}
+.proof-text{font-size:11px;color:var(--boba-color-text-muted);line-height:1.4}
+.proof-text strong{color:var(--boba-color-text)}
+
+/* search + chips */
+.search-wrap{padding:12px 14px 0}
+.search{display:flex;align-items:center;gap:10px;background:var(--boba-color-bg-subtle);border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-pill);padding:10px 14px}
+.search input{flex:1;border:0;outline:0;background:transparent;color:var(--boba-color-text);font-size:13px}
+.search input::placeholder{color:var(--boba-color-text-faint)}
+.chips{padding:12px 14px 0;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;padding:7px 12px;border-radius:var(--boba-radius-pill);border:1px solid var(--boba-color-border);background:var(--boba-color-chip-bg);color:var(--boba-color-text);font-size:11px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.chip[aria-selected="true"]{background:var(--boba-color-chip-active-bg);color:var(--boba-color-chip-active-text);border-color:var(--boba-color-chip-active-bg)}
+.chip-dot{width:6px;height:6px;border-radius:50%;background:var(--boba-color-accent)}
+.chip[aria-selected="true"] .chip-dot{background:#0B0B14}
+
+/* menu — urgency cards, elevation + colored left rail */
+.section{padding:18px 14px 0}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.section-title{font-family:var(--boba-font-display);font-size:13px;letter-spacing:0.08em;text-transform:uppercase;font-weight:700;display:flex;align-items:center;gap:8px}
+.section-title::before{content:"";width:3px;height:16px;background:var(--boba-color-accent);border-radius:var(--boba-radius-pill)}
+.section-count{font-family:var(--boba-font-mono);font-size:11px;color:var(--boba-color-text-muted)}
+.menu{display:flex;flex-direction:column;gap:12px}
+.pulse-card{background:var(--boba-color-card-bg);border:1px solid var(--boba-color-card-border);border-radius:var(--boba-radius-lg);overflow:hidden;box-shadow:var(--boba-shadow-sm);position:relative}
+.pulse-card--hot{border-color:rgba(255,59,92,0.35);box-shadow:0 0 0 1px rgba(255,59,92,0.18), var(--boba-shadow-sm)}
+.card-top{display:flex;gap:12px;padding:12px 12px 0}
+.card-thumb{width:76px;height:76px;border-radius:var(--boba-radius-md);background:var(--boba-color-bg-subtle);border:1px solid var(--boba-color-border);display:grid;place-items:center;font-size:28px;flex-shrink:0;position:relative;overflow:hidden}
+.heat{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#FF3B5C,#FFB800)}
+.card-main{flex:1;min-width:0}
+.card-name{font-size:13px;font-weight:800;line-height:1.2;display:flex;align-items:center;gap:6px}
+.rank{font-family:var(--boba-font-mono);font-size:10px;background:#FFB800;color:#0B0B14;padding:2px 6px;border-radius:var(--boba-radius-pill);font-weight:800}
+.card-desc{font-size:11px;color:var(--boba-color-text-muted);line-height:1.4;margin-top:3px}
+.badges{display:flex;gap:6px;margin-top:7px;flex-wrap:wrap}
+.badge{font-size:10px;font-weight:700;letter-spacing:0.04em;padding:4px 7px;border-radius:var(--boba-radius-pill);border:1px solid var(--boba-color-border);display:flex;align-items:center;gap:4px}
+.badge--hot{background:rgba(255,59,92,0.12);border-color:rgba(255,59,92,0.28);color:#FF6B8A}
+.badge--amber{background:rgba(255,184,0,0.14);border-color:rgba(255,184,0,0.3);color:#FFB800}
+.badge--mint{background:rgba(0,229,204,0.12);border-color:rgba(0,229,204,0.28);color:#00E5CC}
+.card-side{display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:86px}
+.price{font-family:var(--boba-font-mono);font-size:14px;font-weight:800}
+.price-old{font-family:var(--boba-font-mono);font-size:11px;color:var(--boba-color-text-faint);text-decoration:line-through}
+.add-btn{width:100%;background:#fff;color:#0B0B14;border:0;padding:9px 10px;border-radius:var(--boba-radius-pill);font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 12px rgba(0,0,0,0.22)}
+.add-btn--hot{background:var(--boba-color-accent);color:#fff;box-shadow:0 6px 16px rgba(255,59,92,0.35)}
+.add-btn:active{transform:scale(0.98)}
+.qty{display:flex;align-items:center;gap:8px;background:var(--boba-color-bg-subtle);border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-pill);padding:4px}
+.qty button{width:28px;height:28px;border-radius:50%;border:0;background:#fff;color:#0B0B14;font-weight:800;cursor:pointer;display:grid;place-items:center}
+.card-bottom{padding:10px 12px 12px;display:flex;gap:8px;flex-wrap:wrap}
+.mini-add{flex:1;min-width:92px;border:1px dashed var(--boba-color-border);background:rgba(255,255,255,0.03);color:var(--boba-color-text-muted);padding:7px 8px;border-radius:var(--boba-radius-pill);font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:6px}
+.mini-add strong{color:var(--boba-color-text)}
+.mini-add:hover{border-color:var(--boba-color-accent);color:var(--boba-color-text)}
+
+/* progress to reward */
+.progress-wrap{margin:16px 14px 0;background:var(--boba-color-bg-subtle);border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-md);padding:12px}
+.progress-head{display:flex;justify-content:space-between;font-size:11px;font-weight:700}
+.progress-head span:last-child{color:#FFB800;font-family:var(--boba-font-mono)}
+.bar{height:8px;background:#0B0B14;border-radius:var(--boba-radius-pill);overflow:hidden;margin-top:8px;border:1px solid var(--boba-color-border)}
+.fill{height:100%;width:64%;background:linear-gradient(90deg,#FF3B5C,#FFB800);border-radius:var(--boba-radius-pill)}
+.progress-sub{font-size:11px;color:var(--boba-color-text-muted);margin-top:6px}
+
+/* sticky checkout */
+.sticky{position:sticky;bottom:0;background:linear-gradient(to top, #0B0B14 78%, transparent);padding:12px 14px calc(12px + env(safe-area-inset-bottom));display:flex;gap:10px;align-items:center;margin-top:8px}
+.sticky-info{flex:1;background:#fff;color:#0B0B14;border-radius:var(--boba-radius-md);padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.sticky-total{font-family:var(--boba-font-mono);font-size:13px;font-weight:800}
+.sticky-sub{font-size:11px;color:#6B6FA3}
+.sticky-cta{background:var(--boba-color-accent);color:#fff;border:0;padding:12px 18px;border-radius:var(--boba-radius-pill);font-weight:800;font-size:13px;cursor:pointer;box-shadow:0 8px 24px rgba(255,59,92,0.35);white-space:nowrap}
+
+@media (prefers-reduced-motion:reduce){.live-dot{animation:none}}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="brand">◈</div>
+  <div class="header-main">
+    <div class="header-title"><span class="live-dot"></span> Pulse Boba · Live batches</div>
+    <div class="header-sub"><span>Open · ~8 min</span><span>·</span><span>Free topping at $18</span></div>
+  </div>
+  <div class="toggle" role="group" aria-label="Fulfillment"><button>Delivery</button><button class="on">Pickup</button></div>
+  <button class="cart-pill" aria-label="Cart 2">⧉<span class="cart-count">2</span></button>
+</header>
+
+<div class="urgency" role="status">
+  <div class="urgency-left">
+    <div class="urgency-kicker">● Fresh pearls — next batch</div>
+    <div class="urgency-title">Order in the next 03:12 for warm pearls</div>
+    <div class="urgency-sub">Cooked every 20 min · :00 · :20 · :40</div>
+  </div>
+  <div class="timer"><div class="timer-val" aria-live="polite">03:12</div><div class="timer-lab">mins left</div></div>
+</div>
+
+<div class="deals" aria-label="Deals">
+  <div class="deal">
+    <div class="deal-top"><div class="deal-ic">⚡</div><div class="deal-tag">Flash — 8 min</div></div>
+    <div class="deal-title">Brown Sugar + topping = $1 off</div>
+    <div class="deal-sub">Add any topping to Brown Sugar Boba.</div>
+    <button class="deal-cta">Claim →</button>
+  </div>
+  <div class="deal">
+    <div class="deal-top"><div class="deal-ic">🎁</div><div class="deal-tag">Bundle</div></div>
+    <div class="deal-title">Buy 2, 3rd topping free</div>
+    <div class="deal-sub">Mix any drinks. Auto-applied.</div>
+    <button class="deal-cta">Build bundle →</button>
+  </div>
+  <div class="deal">
+    <div class="deal-top"><div class="deal-ic">🔥</div><div class="deal-tag">Most ordered</div></div>
+    <div class="deal-title">247 ordered today — Taro is #2</div>
+    <div class="deal-sub">Social proof · updated hourly.</div>
+    <button class="deal-cta">See ranking →</button>
+  </div>
+</div>
+
+<div class="proof">
+  <div class="proof-avatars"><span class="proof-a">●</span><span class="proof-a">▲</span><span class="proof-a">◆</span></div>
+  <div class="proof-text"><strong>18 people</strong> ordered in last 30 min · <strong>Ana, Ken, Priya</strong> ordered Brown Sugar</div>
+</div>
+
+<div class="search-wrap"><label class="search"><span style="opacity:0.6">⌕</span><input placeholder="Search — brown sugar, taro, yuzu… quick add"/><span style="font-family:var(--boba-font-mono);font-size:10px;color:var(--boba-color-text-faint)">/</span></label></div>
+
+<nav class="chips" role="tablist" aria-label="Categories">
+  <button class="chip" role="tab" aria-selected="true"><span class="chip-dot"></span> All 12</button>
+  <button class="chip" role="tab" aria-selected="false">Classic 🔥</button>
+  <button class="chip" role="tab" aria-selected="false">Fruit Tea</button>
+  <button class="chip" role="tab" aria-selected="false">Fresh Milk</button>
+  <button class="chip" role="tab" aria-selected="false">Cheese Foam</button>
+  <button class="chip" role="tab" aria-selected="false">Slush</button>
+</nav>
+
+<section class="section" aria-labelledby="sec-hot">
+  <div class="section-head"><h2 id="sec-hot" class="section-title">Hot right now</h2><span class="section-count">03:12 · warm pearls</span></div>
+  <div class="menu">
+    <article class="pulse-card pulse-card--hot">
+      <div class="card-top">
+        <div class="card-thumb">🧋<div class="heat"></div></div>
+        <div class="card-main">
+          <div class="card-name">Brown Sugar Boba <span class="rank">#1 · 247 today</span></div>
+          <div class="card-desc">Muscovado syrup · Straus milk · 12 left warm</div>
+          <div class="badges"><span class="badge badge--hot">● Low: 12 left</span><span class="badge badge--amber">⚡ $1 off with topping</span></div>
+        </div>
+        <div class="card-side"><div class="price">$5.90</div><div class="price-old">$6.90</div><button class="add-btn add-btn--hot">Add +</button></div>
+      </div>
+      <div class="card-bottom">
+        <button class="mini-add"><span>+ Pearls</span><strong>+$0.80</strong></button>
+        <button class="mini-add"><span>+ Crystal</span><strong>+$0.80</strong></button>
+        <button class="mini-add"><span>+ Pudding</span><strong>+$0.80</strong></button>
+      </div>
+    </article>
+    <article class="pulse-card">
+      <div class="card-top">
+        <div class="card-thumb">🍠</div>
+        <div class="card-main">
+          <div class="card-name">Taro Milk <span class="rank">#2</span></div>
+          <div class="card-desc">Real taro · no powder · 89 ordered today</div>
+          <div class="badges"><span class="badge badge--amber">★ Popular</span><span class="badge">Oat +$0.80</span></div>
+        </div>
+        <div class="card-side"><div class="price">$5.20</div><button class="add-btn">Add +</button></div>
+      </div>
+      <div class="card-bottom"><button class="mini-add"><span>+ Red bean</span><strong>+$0.80</strong></button><button class="mini-add"><span>+ Grass jelly</span><strong>+$0.80</strong></button></div>
+    </article>
+    <article class="pulse-card">
+      <div class="card-top">
+        <div class="card-thumb">🥭</div>
+        <div class="card-main">
+          <div class="card-name">Mango Pomelo Sago</div>
+          <div class="card-desc">Fresh mango · pomelo · last batch 18:40</div>
+          <div class="badges"><span class="badge badge--mint">◐ Seasonal</span><span class="badge">Limited batch</span></div>
+        </div>
+        <div class="card-side"><div class="price">$6.20</div><button class="add-btn">Add +</button></div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2 class="section-title">Classic Milk Tea</h2><span class="section-count">04</span></div>
+  <div class="menu">
+    <article class="pulse-card">
+      <div class="card-top"><div class="card-thumb">🍵</div><div class="card-main"><div class="card-name">Classic Pearl</div><div class="card-desc">Assam · cane sugar · 112 today</div><div class="badges"><span class="badge">In cart ✓</span></div></div><div class="card-side"><div class="price">$4.50</div><div class="qty"><button>-</button><span style="font-family:var(--boba-font-mono);font-weight:700">1</span><button>+</button></div></div></div>
+    </article>
+    <article class="pulse-card">
+      <div class="card-top"><div class="card-thumb">🍃</div><div class="card-main"><div class="card-name">Matcha Latte</div><div class="card-desc">Uji ceremonial · oat default</div><div class="badges"><span class="badge badge--amber">Low sugar</span></div></div><div class="card-side"><div class="price">$5.40</div><button class="add-btn">Add +</button></div></div>
+    </article>
+  </div>
+</section>
+
+<div class="progress-wrap">
+  <div class="progress-head"><span>Add $4.20 more → free topping</span><span>64%</span></div>
+  <div class="bar"><div class="fill"></div></div>
+  <div class="progress-sub">Tip: add crystal boba to Brown Sugar to unlock $1 flash discount.</div>
+</div>
+
+<section class="section" aria-labelledby="sec-more">
+  <div class="section-head"><h2 id="sec-more" class="section-title">More to try</h2><span class="section-count">07</span></div>
+  <div class="menu">
+    <article class="pulse-card"><div class="card-top"><div class="card-thumb">🍓</div><div class="card-main"><div class="card-name">Strawberry Green Tea</div><div class="card-desc">Sencha · strawberry · aloe opt.</div><div class="badges"><span class="badge">Aloe +$0.80</span></div></div><div class="card-side"><div class="price">$5.60</div><button class="add-btn">Add +</button></div></div></article>
+    <article class="pulse-card"><div class="card-top"><div class="card-thumb">🍋</div><div class="card-main"><div class="card-name">Yuzu Citrus</div><div class="card-desc">Yuzu · honey · jasmine</div><div class="badges"><span class="badge badge--mint">Caffeine-free</span></div></div><div class="card-side"><div class="price">$5.80</div><button class="add-btn">Add +</button></div></div></article>
+    <article class="pulse-card"><div class="card-top"><div class="card-thumb">☕</div><div class="card-main"><div class="card-name">Hojicha Latte</div><div class="card-desc">Roasted hojicha · brown sugar</div><div class="badges"><span class="badge badge--hot">● 5 left hot</span></div></div><div class="card-side"><div class="price">$5.40</div><button class="add-btn">Add +</button></div></div></article>
+    <article class="pulse-card"><div class="card-top"><div class="card-thumb">🥛</div><div class="card-main"><div class="card-name">Okinawa Milk</div><div class="card-desc">Kokuto · fresh milk · no tea</div><div class="badges"><span class="badge">Kid-friendly</span></div></div><div class="card-side"><div class="price">$4.90</div><button class="add-btn">Add +</button></div></div></article>
+    <article class="pulse-card"><div class="card-top"><div class="card-thumb">🧀</div><div class="card-main"><div class="card-name">Uji Matcha Cheese</div><div class="card-desc">Salted cream · Uji matcha</div><div class="badges"><span class="badge badge--amber">★ Popular cheese</span></div></div><div class="card-side"><div class="price">$6.20</div><button class="add-btn">Add +</button></div></div></article>
+    <article class="pulse-card"><div class="card-top"><div class="card-thumb">🍂</div><div class="card-main"><div class="card-name">Brown Sugar Cheese</div><div class="card-desc">Cheese cap · brown sugar boba</div><div class="badges"><span class="badge">+$0.80 foam</span></div></div><div class="card-side"><div class="price">$6.50</div><button class="add-btn">Add +</button></div></div></article>
+    <article class="pulse-card"><div class="card-top"><div class="card-thumb">🍧</div><div class="card-main"><div class="card-name">Taro Cloud Slush</div><div class="card-desc">Taro snow · cheese cloud · pearls</div><div class="badges"><span class="badge badge--mint">Limited</span></div></div><div class="card-side"><div class="price">$6.80</div><button class="add-btn">Add +</button></div></div></article>
+  </div>
+</section>
+
+<div class="sticky">
+  <div class="sticky-info"><div><div class="sticky-total">2 items · $10.70</div><div class="sticky-sub">Add topping to Brown Sugar → $1 off</div></div><div style="font-size:16px">→</div></div>
+  <button class="sticky-cta">Checkout · $10.70</button>
+</div>
+
+</body>
+</html>

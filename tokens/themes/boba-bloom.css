@@ -1,0 +1,24 @@
+/* boba-bloom.css — thesis: Abundance invites play; topping buffet grows basket
+ * Slots: surfaceBoundary:fill / depthModel:surface-tint / darkStrategy:tint-inversion
+ * cornerPhilosophy:scaled-by-role / shapeCarriesBrand:yes / colorRole:expressive
+ * functionalColorContainment:surface-permitted / colorInHierarchy:supporting / polarityEncoding:icon-led
+ * typeRoleAssignment: rounded display + clean body / monospaceScope:unrestricted
+ * density:comfortable / spaceAllocation:even-rhythm / sectionRhythm:surface-inversion
+ * motion:{200-300ms,ease-out,expressiveAllowedIn:[card-enter]} / decoration:illustration-contained
+ * emphasisSurfaceBudget:unbounded / hierarchySignals:[colour,size,position,weight]
+ */
+[data-theme="boba-bloom"]{
+  --boba-blo-bg:#FFFCF2;--boba-blo-bg-sub:#FFF3D6;--boba-blo-card:#FFFFFF;--boba-blo-line:#F0D9A8;--boba-blo-line2:#E8C88A;
+  --boba-blo-ink:#2B1E0F;--boba-blo-muted:#8C7A5B;--boba-blo-faint:#B8A48A;
+  --boba-blo-mango:#FF8A00;--boba-blo-taro:#8B5CF6;--boba-blo-matcha:#16A34A;--boba-blo-straw:#FF3B5C;--boba-blo-cream:#FFF7D6;
+  --boba-color-bg:var(--boba-blo-bg);--boba-color-bg-subtle:var(--boba-blo-bg-sub);--boba-color-bg-elevated:var(--boba-blo-card);
+  --boba-color-bg-inverse:var(--boba-blo-ink);--boba-color-text:var(--boba-blo-ink);--boba-color-text-muted:var(--boba-blo-muted);
+  --boba-color-text-inverse:#FFFCF2;--boba-color-text-faint:var(--boba-blo-faint);
+  --boba-color-border:var(--boba-blo-line);--boba-color-border-strong:var(--boba-blo-ink);
+  --boba-color-accent:var(--boba-blo-mango);--boba-color-accent-text:#fff;--boba-color-accent-subtle:var(--boba-blo-cream);
+  --boba-color-card-bg:var(--boba-blo-card);--boba-color-card-border:var(--boba-blo-line);
+  --boba-color-chip-bg:#FFFFFF;--boba-color-chip-active-bg:var(--boba-blo-ink);--boba-color-chip-active-text:#FFFCF2;
+  --boba-font-display:'Nunito','Inter',system-ui,sans-serif;--boba-font-body:'Inter',system-ui,sans-serif;--boba-font-mono:'JetBrains Mono',monospace;
+  --boba-radius-sm:10px;--boba-radius-md:16px;--boba-radius-lg:20px;--boba-radius-xl:28px;--boba-radius-pill:999px;
+  --boba-shadow-sm:0 2px 10px rgba(43,30,15,0.07);--boba-shadow-md:0 8px 24px rgba(43,30,15,0.10);--boba-shadow-lg:0 16px 40px rgba(43,30,15,0.14);
+}

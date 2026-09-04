@@ -1,0 +1,46 @@
+/* boba-obsidian.css — thesis: Restraint as law; hierarchy without colour */
+[data-theme="boba-obsidian"] {
+  /* Private primitives → semantic mapping */
+  --boba-obs-ink: #0a0a0a;
+  --boba-obs-paper: #ffffff;
+  --boba-obs-paper-subtle: #f4f4f3;
+  --boba-obs-line: #e7e7e4;
+  --boba-obs-line-strong: #0a0a0a;
+  --boba-obs-muted: #6b6b6b;
+  --boba-obs-faint: #9a9a9a;
+  --boba-obs-accent: #0a0a0a;
+
+  --boba-color-bg: var(--boba-obs-paper);
+  --boba-color-bg-subtle: var(--boba-obs-paper-subtle);
+  --boba-color-bg-elevated: var(--boba-obs-paper);
+  --boba-color-bg-inverse: var(--boba-obs-ink);
+  --boba-color-text: var(--boba-obs-ink);
+  --boba-color-text-muted: var(--boba-obs-muted);
+  --boba-color-text-inverse: var(--boba-obs-paper);
+  --boba-color-border: var(--boba-obs-line);
+  --boba-color-border-strong: var(--boba-obs-line-strong);
+  --boba-color-accent: var(--boba-obs-accent);
+  --boba-color-card-bg: #ffffff;
+  --boba-color-card-border: #e7e7e4;
+  --boba-color-chip-bg: #ffffff;
+  --boba-color-chip-active-bg: #0a0a0a;
+  --boba-color-chip-active-text: #ffffff;
+
+  --boba-font-display: 'Inter', system-ui, sans-serif;
+  --boba-font-body: 'Inter', system-ui, sans-serif;
+  --boba-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --boba-radius-sm: 4px;
+  --boba-radius-md: 6px;
+  --boba-radius-lg: 8px;
+  --boba-radius-xl: 10px;
+  --boba-radius-pill: 999px;
+
+  --boba-shadow-sm: none;
+  --boba-shadow-md: none;
+  --boba-shadow-lg: none;
+
+  --boba-duration-fast: 150ms;
+  --boba-duration-base: 180ms;
+  --boba-ease-default: cubic-bezier(0.2, 0, 0, 1);
+}

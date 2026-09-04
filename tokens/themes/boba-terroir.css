@@ -1,0 +1,52 @@
+/* boba-terroir.css — thesis: Tea as craft; earth honesty and process */
+[data-theme="boba-terroir"] {
+  --boba-ter-bg: #FDFCF8;
+  --boba-ter-bg-subtle: #F5F1E8;
+  --boba-ter-bg-elevated: #ffffff;
+  --boba-ter-ink: #2C2416;
+  --boba-ter-muted: #8A7D6B;
+  --boba-ter-line: #E8E0D0;
+  --boba-ter-line-strong: #2C2416;
+  --boba-ter-clay: #C17A56;
+  --boba-ter-clay-dark: #9C5E3D;
+  --boba-ter-sage: #7A9B7E;
+  --boba-ter-stone: #E8E0D0;
+  --boba-ter-amber: #D4A574;
+
+  --boba-color-bg: var(--boba-ter-bg);
+  --boba-color-bg-subtle: var(--boba-ter-bg-subtle);
+  --boba-color-bg-elevated: var(--boba-ter-bg-elevated);
+  --boba-color-bg-inverse: var(--boba-ter-ink);
+  --boba-color-text: var(--boba-ter-ink);
+  --boba-color-text-muted: var(--boba-ter-muted);
+  --boba-color-text-inverse: #FDFCF8;
+  --boba-color-text-faint: #B8A99A;
+  --boba-color-border: var(--boba-ter-line);
+  --boba-color-border-strong: var(--boba-ter-line-strong);
+  --boba-color-accent: var(--boba-ter-clay);
+  --boba-color-accent-text: #ffffff;
+  --boba-color-accent-subtle: #FDF0E6;
+  --boba-color-card-bg: #ffffff;
+  --boba-color-card-border: #E8E0D0;
+  --boba-color-chip-bg: #ffffff;
+  --boba-color-chip-active-bg: var(--boba-ter-ink);
+  --boba-color-chip-active-text: #FDFCF8;
+
+  --boba-font-display: 'Fraunces', 'Georgia', serif;
+  --boba-font-body: 'Inter', system-ui, sans-serif;
+  --boba-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --boba-radius-sm: 8px;
+  --boba-radius-md: 12px;
+  --boba-radius-lg: 12px;
+  --boba-radius-xl: 16px;
+  --boba-radius-pill: 999px;
+
+  --boba-shadow-sm: 0 1px 3px rgba(44,36,22,0.06);
+  --boba-shadow-md: 0 4px 16px rgba(44,36,22,0.08);
+  --boba-shadow-lg: 0 12px 32px rgba(44,36,22,0.10);
+
+  --boba-duration-fast: 160ms;
+  --boba-duration-base: 220ms;
+  --boba-ease-default: cubic-bezier(0.25, 0.1, 0.25, 1);
+}

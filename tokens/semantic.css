@@ -1,0 +1,84 @@
+/* semantic.css — Boba Shop Contract v1.0.0
+ * Own contract. Not imported from RDK. Inspired by RDK 3-tier discipline.
+ * Every theme MUST resolve every token below. Components read ONLY these.
+ * Namespace: --boba-* (shared semantic). Private primitives: --boba-obs-*, --boba-moc-*, --boba-ter-*
+ */
+
+:root {
+  /* Color — roles, never values */
+  --boba-color-bg: #ffffff;
+  --boba-color-bg-subtle: #f6f6f5;
+  --boba-color-bg-elevated: #ffffff;
+  --boba-color-bg-inverse: #0a0a0a;
+  --boba-color-text: #0a0a0a;
+  --boba-color-text-muted: #6b7280;
+  --boba-color-text-inverse: #ffffff;
+  --boba-color-text-faint: #9ca3af;
+  --boba-color-border: #e5e7eb;
+  --boba-color-border-strong: #111111;
+  --boba-color-accent: #111111;
+  --boba-color-accent-text: #ffffff;
+  --boba-color-accent-subtle: #f3f4f6;
+  --boba-color-success: #16a34a;
+  --boba-color-warn: #d97706;
+  --boba-color-overlay: rgba(0,0,0,0.4);
+
+  /* Surface */
+  --boba-color-card-bg: #ffffff;
+  --boba-color-card-border: #e5e7eb;
+  --boba-color-chip-bg: #ffffff;
+  --boba-color-chip-active-bg: #111111;
+  --boba-color-chip-active-text: #ffffff;
+
+  /* Typography */
+  --boba-font-display: 'Inter', system-ui, -apple-system, sans-serif;
+  --boba-font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --boba-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --boba-text-xs: 0.72rem;
+  --boba-text-sm: 0.84rem;
+  --boba-text-base: 0.95rem;
+  --boba-text-lg: 1.1rem;
+  --boba-text-xl: 1.35rem;
+  --boba-text-2xl: 1.6rem;
+  --boba-leading-tight: 1.15;
+  --boba-leading-normal: 1.5;
+  --boba-weight-regular: 400;
+  --boba-weight-medium: 500;
+  --boba-weight-semibold: 600;
+  --boba-weight-bold: 700;
+  --boba-weight-black: 800;
+
+  /* Space — 4px base */
+  --boba-space-1: 4px;
+  --boba-space-2: 8px;
+  --boba-space-3: 12px;
+  --boba-space-4: 16px;
+  --boba-space-5: 20px;
+  --boba-space-6: 24px;
+  --boba-space-8: 32px;
+  --boba-space-10: 40px;
+
+  /* Radius */
+  --boba-radius-sm: 6px;
+  --boba-radius-md: 10px;
+  --boba-radius-lg: 16px;
+  --boba-radius-xl: 20px;
+  --boba-radius-pill: 999px;
+
+  /* Elevation */
+  --boba-shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
+  --boba-shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --boba-shadow-lg: 0 12px 32px rgba(0,0,0,0.12);
+
+  /* Motion */
+  --boba-duration-fast: 150ms;
+  --boba-duration-base: 220ms;
+  --boba-duration-slow: 320ms;
+  --boba-ease-default: cubic-bezier(0.2, 0, 0, 1);
+  --boba-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Layout */
+  --boba-header-h: 56px;
+  --boba-nav-h: 64px;
+  --boba-content-max: 390px;
+}

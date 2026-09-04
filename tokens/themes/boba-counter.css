@@ -1,0 +1,24 @@
+/* boba-counter.css — thesis: Trust converts; clarity beats decoration
+ * Slots: surfaceBoundary:hybrid / depthModel:layer-token / darkStrategy:single-palette
+ * cornerPhilosophy:uniform / shapeCarriesBrand:no / colorRole:functional-only
+ * functionalColorContainment:badge-only / colorInHierarchy:supporting / polarityEncoding:weight-before-color
+ * typeRoleAssignment: Inter + mono for price only / monospaceScope:data-only
+ * density:high / spaceAllocation:earned-by-importance / sectionRhythm:border-rule
+ * motion:{150-200ms,ease-out,expressiveAllowedIn:none} / decoration:none
+ * emphasisSurfaceBudget:2 / hierarchySignals:[weight,size,position,surface-contrast]
+ */
+[data-theme="boba-counter"]{
+  --boba-cou-bg:#F8F7F5;--boba-cou-bg-sub:#EFEDE9;--boba-cou-card:#FFFFFF;--boba-cou-line:#E7E2DA;--boba-cou-line2:#D6D0C4;
+  --boba-cou-ink:#141310;--boba-cou-muted:#7A756E;--boba-cou-faint:#A8A29A;
+  --boba-cou-accent:#141310;--boba-cou-success:#0E7A3A;--boba-cou-amber:#B7791F;
+  --boba-color-bg:var(--boba-cou-bg);--boba-color-bg-subtle:var(--boba-cou-bg-sub);--boba-color-bg-elevated:var(--boba-cou-card);
+  --boba-color-bg-inverse:var(--boba-cou-ink);--boba-color-text:var(--boba-cou-ink);--boba-color-text-muted:var(--boba-cou-muted);
+  --boba-color-text-inverse:#fff;--boba-color-text-faint:var(--boba-cou-faint);
+  --boba-color-border:var(--boba-cou-line);--boba-color-border-strong:var(--boba-cou-ink);
+  --boba-color-accent:var(--boba-cou-accent);--boba-color-accent-text:#fff;--boba-color-accent-subtle:var(--boba-cou-bg-sub);
+  --boba-color-card-bg:var(--boba-cou-card);--boba-color-card-border:var(--boba-cou-line);
+  --boba-color-chip-bg:#FFFFFF;--boba-color-chip-active-bg:var(--boba-cou-ink);--boba-color-chip-active-text:#fff;
+  --boba-font-display:'Inter',system-ui,sans-serif;--boba-font-body:'Inter',system-ui,sans-serif;--boba-font-mono:'JetBrains Mono',monospace;
+  --boba-radius-sm:6px;--boba-radius-md:10px;--boba-radius-lg:10px;--boba-radius-xl:14px;--boba-radius-pill:999px;
+  --boba-shadow-sm:0 1px 2px rgba(20,19,16,0.06);--boba-shadow-md:0 4px 14px rgba(20,19,16,0.08);--boba-shadow-lg:0 12px 28px rgba(20,19,16,0.12);
+}
