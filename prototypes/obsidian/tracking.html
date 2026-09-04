@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en" data-theme="boba-obsidian">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Tracking — Boba · Obsidian</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--boba-color-bg:#ffffff;--boba-color-bg-subtle:#f4f4f3;--boba-color-bg-elevated:#ffffff;--boba-color-bg-inverse:#0a0a0a;--boba-color-text:#0a0a0a;--boba-color-text-muted:#6b6b6b;--boba-color-text-inverse:#ffffff;--boba-color-text-faint:#9a9a9a;--boba-color-border:#e7e7e4;--boba-color-border-strong:#0a0a0a;--boba-font-body:'Inter',system-ui,sans-serif;--boba-font-mono:'JetBrains Mono',monospace;--boba-radius-sm:4px;--boba-radius-md:6px;--boba-radius-pill:999px;--boba-duration-fast:150ms;--boba-ease:cubic-bezier(0.2,0,0,1)}
+*{box-sizing:border-box;margin:0;padding:0;max-width:100%}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:clip;max-width:100vw}
+body{font-family:var(--boba-font-body);background:var(--boba-color-bg);color:var(--boba-color-text);-webkit-font-smoothing:antialiased;width:100%;max-width:min(100vw,390px);margin:0 auto;min-height:100dvh;min-height:100svh;overflow-x:clip}
+@media (max-width:392px){body{border-left:none;border-right:none}}
+button{font:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+:focus-visible{outline:2px solid var(--boba-color-border-strong);outline-offset:2px}
+img{max-width:100%}
+.header{position:sticky;top:0;z-index:20;background:var(--boba-color-bg);border-bottom:1px solid var(--boba-color-border);display:flex;align-items:center;gap:12px;padding:10px 16px}
+.back{width:32px;height:32px;border:1px solid var(--boba-color-border);background:var(--boba-color-bg);border-radius:4px;display:grid;place-items:center;cursor:pointer}
+.header-title{font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:700}
+.card{margin:12px 16px 0;background:var(--boba-color-bg);border:1px solid var(--boba-color-border);border-radius:6px;overflow:hidden}
+.card-head{padding:12px 16px;border-bottom:1px solid var(--boba-color-border);display:flex;justify-content:space-between;align-items:center;gap:12px}
+.card-head-left{font-size:11px;color:var(--boba-color-text-muted);font-family:var(--boba-font-mono)}
+.card-head-right{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;padding:4px 8px;border:1px solid var(--boba-color-border-strong);background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse);border-radius:999px;font-weight:700}
+.timeline{padding:16px}
+.timeline-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.timeline-label{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--boba-color-text-muted);font-weight:600}
+.status-pill{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;padding:4px 8px;border:1px solid var(--boba-color-border-strong);border-radius:999px;font-weight:700;background:var(--boba-color-bg)}
+.status-pill--active{background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse)}
+.steps{display:flex;flex-direction:column;gap:0}
+.step{display:flex;gap:12px;position:relative;padding-bottom:18px}
+.step:last-child{padding-bottom:0}
+.step-line{position:absolute;left:15px;top:32px;bottom:-2px;width:1px;background:var(--boba-color-border)}
+.step:last-child .step-line{display:none}
+.step-icon{width:32px;height:32px;border-radius:50%;border:1px solid var(--boba-color-border);background:var(--boba-color-bg);display:grid;place-items:center;font-size:14px;flex-shrink:0;position:relative;z-index:1}
+.step--done .step-icon{border-color:var(--boba-color-border-strong);background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse)}
+.step--active .step-icon{border-color:var(--boba-color-border-strong);background:var(--boba-color-bg);color:var(--boba-color-text);box-shadow:0 0 0 4px rgba(10,10,10,0.08)}
+.step-main{flex:1;min-width:0;padding-top:4px}
+.step-title{font-size:12px;font-weight:700}
+.step-desc{font-size:11px;color:var(--boba-color-text-muted);margin-top:2px}
+.step-time{font-family:var(--boba-font-mono);font-size:11px;color:var(--boba-color-text-muted);white-space:nowrap;padding-top:4px}
+.pickup-box{margin:16px 16px 0;border:1px solid var(--boba-color-border-strong);border-radius:6px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--boba-color-bg-subtle)}
+.pickup-code{font-family:var(--boba-font-mono);font-size:22px;font-weight:800;letter-spacing:0.12em}
+.pickup-meta{font-size:11px;color:var(--boba-color-text-muted)}
+.code-input{margin:12px 16px 0;display:flex;gap:8px}
+.code-input input{flex:1;text-align:center;font-family:var(--boba-font-mono);font-size:18px;font-weight:700;letter-spacing:0.12em;padding:12px;border:1px solid var(--boba-color-border-strong);border-radius:4px;min-width:0}
+.actions{padding:16px;display:flex;flex-direction:column;gap:8px}
+.btn{padding:12px 16px;border-radius:4px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;font-weight:700;cursor:pointer}
+.btn-primary{background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse);border:1px solid var(--boba-color-border-strong)}
+.btn-ghost{background:var(--boba-color-bg);color:var(--boba-color-text);border:1px solid var(--boba-color-border)}
+.btn:disabled{opacity:0.4;cursor:default}
+.admin-panel{margin:12px 16px 0;border:1px dashed var(--boba-color-border);border-radius:6px;padding:12px;background:#fffbe6}
+.admin-title{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;color:#8a6d00}
+.admin-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.admin-actions button{padding:8px 10px;font-size:11px;border:1px solid var(--boba-color-border-strong);background:#fff;border-radius:4px;cursor:pointer;font-weight:600}
+.toast-stack{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:8px;max-width:min(90vw,390px)}
+.toast{background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse);border:1px solid var(--boba-color-border-strong);border-radius:4px;padding:10px 12px;font-size:11px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+</style>
+</head>
+<body>
+<header class="header">
+  <button class="back" id="backBtn" aria-label="Back to menu">←</button>
+  <div class="header-title" id="headerTitle">Tracking</div>
+  <div style="margin-left:auto;font-family:var(--boba-font-mono);font-size:11px;color:var(--boba-color-text-muted)" id="orderIdHead">—</div>
+</header>
+
+<div class="card">
+  <div class="card-head">
+    <div>
+      <div class="card-head-left" id="cardTenant">Boba · Obsidian</div>
+      <div style="font-size:12px;font-weight:700;margin-top:2px" id="cardOrderId">ORDER —</div>
+    </div>
+    <div class="card-head-right" id="cardStatus">SENT</div>
+  </div>
+  <div class="timeline">
+    <div class="timeline-head">
+      <div class="timeline-label">Timeline</div>
+      <div class="status-pill" id="statusPill">In Progress</div>
+    </div>
+    <div class="steps" id="steps"></div>
+  </div>
+</div>
+
+<div class="pickup-box" id="pickupBox" hidden>
+  <div>
+    <div style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--boba-color-text-muted)">Pickup code</div>
+    <div class="pickup-code" id="pickupCode">—</div>
+    <div class="pickup-meta" id="pickupExpiry">—</div>
+    <div class="pickup-meta">Visible to staff. Expires in 30m.</div>
+  </div>
+  <img id="pickupQr" alt="QR" width="72" height="72" style="border:1px solid var(--boba-color-border);border-radius:4px;background:#fff" />
+</div>
+
+<div class="code-input" id="codeInput" hidden>
+  <input id="codeField" inputmode="numeric" maxlength="4" placeholder="0000" aria-label="Pickup code" />
+  <button class="btn btn-primary" id="submitCodeBtn" style="flex:0 0 auto;padding:12px 16px">Submit code</button>
+</div>
+
+<div class="actions">
+  <button class="btn btn-ghost" id="downloadBtn" hidden>Download receipt image</button>
+  <button class="btn btn-primary" id="confirmPickupBtn" hidden>Confirm pickup →</button>
+  <div id="completedMsg" hidden style="text-align:center;padding:12px;border:1px solid var(--boba-color-border);border-radius:4px;background:var(--boba-color-bg-subtle)">
+    <div style="font-weight:700">Order completed ✓</div>
+    <div style="font-size:11px;color:var(--boba-color-text-muted);margin-top:4px">Thanks for visiting. Redirecting to menu…</div>
+  </div>
+</div>
+
+<div class="admin-panel" id="adminPanel">
+  <div class="admin-title">Admin — dev only (main admin → staff)</div>
+  <div style="font-size:11px;color:var(--boba-color-text-muted);margin-top:4px">Tap to advance order (simulates staff actions, emits live toasts + WS).</div>
+  <div class="admin-actions">
+    <button id="adminReceived">Confirm received</button>
+    <button id="adminProcessing">Start processing</button>
+    <button id="adminReady">Mark ready</button>
+    <button id="adminAwaiting">Generate pickup</button>
+  </div>
+  <div style="font-size:10px;color:var(--boba-color-text-muted);margin-top:6px">Staff can be created by OWNER at <code>/admin/staff</code> in real backend. Here all actions are allowed for demo.</div>
+</div>
+
+<div id="toastStack" class="toast-stack"></div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const orderId = params.get('id');
+const tenant = params.get('tenant') || 'boba-obsidian';
+const key = `boba:tenant:${tenant}:order:${orderId}`;
+let order = null;
+try{ order = JSON.parse(localStorage.getItem(key) || 'null'); }catch{}
+if(!order){ document.body.innerHTML='<div style="padding:24px;text-align:center">Order not found<br><a href="./menu.html">Back to menu</a></div>'; throw new Error('no order'); }
+
+const STATUS = ['SENT','RECEIVED','PROCESSING','READY','AWAITING_PICKUP'];
+const LABELS = {SENT:'Order sent', RECEIVED:'Order received', PROCESSING:'Processing', READY:'Ready', AWAITING_PICKUP:'Awaiting pickup'};
+const DESCS = {SENT:'Awaiting admin confirmation', RECEIVED:'Confirmed by admin', PROCESSING:'Kitchen preparing', READY:'Ready for pickup', AWAITING_PICKUP:'Show code at counter'};
+const ICONS = {SENT:'◈', RECEIVED:'✓', PROCESSING:'◍', READY:'✦', AWAITING_PICKUP:'◉'};
+
+function fmt(n){ return '₵'+Number(n).toFixed(2); }
+function showToast(msg){
+  const s=document.getElementById('toastStack');
+  const t=document.createElement('div'); t.className='toast'; t.innerHTML=`<span>${msg}</span><button>✕</button>`;
+  t.querySelector('button').onclick=()=>t.remove();
+  s.appendChild(t); setTimeout(()=>t.remove(),3200);
+}
+
+function save(){
+  localStorage.setItem(key, JSON.stringify(order));
+  try{ const ch=new BroadcastChannel('boba:orders'); ch.postMessage({type:'order:update', tenant, order}); ch.close(); }catch{}
+}
+
+function render(){
+  document.getElementById('orderIdHead').textContent = order.id.slice(0,13);
+  document.getElementById('cardOrderId').textContent = 'ORDER '+order.id;
+  document.getElementById('cardTenant').textContent = tenant;
+  document.getElementById('cardStatus').textContent = order.status;
+  const pill=document.getElementById('statusPill');
+  pill.textContent = order.status==='COMPLETED' ? 'Completed' : 'In Progress';
+  pill.className = 'status-pill' + (order.status==='COMPLETED'?'':' status-pill--active');
+  const stepsEl=document.getElementById('steps');
+  const curIdx = STATUS.indexOf(order.status);
+  const isCompleted = order.status==='COMPLETED';
+  const effectiveIdx = isCompleted ? STATUS.length-1 : curIdx;
+  stepsEl.innerHTML = STATUS.map((s,i)=>{
+    const done = i < effectiveIdx || isCompleted || i===0 && order.status==='SENT';
+    const active = i===effectiveIdx && !isCompleted;
+    const time = order.updatedAt ? new Date(order.updatedAt).toLocaleTimeString('en-GH',{hour:'2-digit',minute:'2-digit'}) : '';
+    return `<div class="step ${done?'step--done':''} ${active?'step--active':''}">
+      <div class="step-icon">${ICONS[s]}</div>
+      <div class="step-line"></div>
+      <div class="step-main"><div class="step-title">${LABELS[s]}</div><div class="step-desc">${DESCS[s]}</div></div>
+      <div class="step-time">${time}</div>
+    </div>`;
+  }).join('');
+
+  const pickupBox=document.getElementById('pickupBox');
+  const codeInput=document.getElementById('codeInput');
+  const confirmBtn=document.getElementById('confirmPickupBtn');
+  const downloadBtn=document.getElementById('downloadBtn');
+  const completedMsg=document.getElementById('completedMsg');
+  if(order.status==='AWAITING_PICKUP' || order.status==='READY'){
+    if(order.pickupCode){
+      pickupBox.hidden=false;
+      document.getElementById('pickupCode').textContent=order.pickupCode;
+      document.getElementById('pickupExpiry').textContent='Expires '+new Date(order.pickupExpiresAt).toLocaleTimeString();
+      document.getElementById('pickupQr').src='https://api.qrserver.com/v1/create-qr-code/?size=72x72&data='+encodeURIComponent(order.id+'|'+order.pickupCode);
+    }
+  } else {
+    pickupBox.hidden=true;
+  }
+  if(order.status==='AWAITING_PICKUP'){
+    codeInput.hidden=false;
+    confirmBtn.hidden=true;
+  } else if(order.status==='COMPLETED'){
+    codeInput.hidden=true;
+    confirmBtn.hidden=true;
+    downloadBtn.hidden=false;
+    completedMsg.hidden=false;
+  } else {
+    codeInput.hidden=true;
+    confirmBtn.hidden=true;
+    downloadBtn.hidden=true;
+    completedMsg.hidden=true;
+  }
+  // admin button states
+  document.getElementById('adminReceived').disabled = order.status!=='SENT';
+  document.getElementById('adminProcessing').disabled = order.status!=='RECEIVED';
+  document.getElementById('adminReady').disabled = order.status!=='PROCESSING';
+  document.getElementById('adminAwaiting').disabled = order.status!=='READY';
+}
+
+document.getElementById('backBtn').onclick=()=> location.href='./menu.html';
+document.getElementById('adminReceived').onclick=()=>{
+  if(order.status!=='SENT') return;
+  order.status='RECEIVED'; order.updatedAt=new Date().toISOString();
+  save(); render(); showToast('Order received — toast to customer');
+  try{ const ch=new BroadcastChannel('boba:orders'); ch.postMessage({type:'toast', msg:'Order received'});}catch{}
+};
+document.getElementById('adminProcessing').onclick=()=>{
+  if(order.status!=='RECEIVED') return;
+  order.status='PROCESSING'; order.updatedAt=new Date().toISOString();
+  save(); render(); showToast('Processing started');
+};
+document.getElementById('adminReady').onclick=()=>{
+  if(order.status!=='PROCESSING') return;
+  order.status='READY'; order.updatedAt=new Date().toISOString();
+  save(); render(); showToast('Order ready — live tracker updated');
+};
+document.getElementById('adminAwaiting').onclick=()=>{
+  if(order.status!=='READY') return;
+  if(!order.pickupCode){ order.pickupCode=String(1000+Math.floor(Math.random()*9000)); order.pickupExpiresAt=new Date(Date.now()+30*60000).toISOString(); }
+  order.status='AWAITING_PICKUP'; order.updatedAt=new Date().toISOString();
+  save(); render(); showToast('Awaiting pickup — code '+order.pickupCode+' visible to both');
+};
+
+document.getElementById('submitCodeBtn').onclick=()=>{
+  const code=document.getElementById('codeField').value.trim();
+  if(code.length!==4){ showToast('Enter 4-digit code'); return; }
+  if(!order.pickupCode || code!==order.pickupCode){ showToast('Code mismatch'); return; }
+  if(new Date() > new Date(order.pickupExpiresAt)){ showToast('Code expired'); return; }
+  // ask confirm
+  document.getElementById('codeInput').hidden=true;
+  document.getElementById('confirmPickupBtn').hidden=false;
+  showToast('Code verified — confirm pickup');
+};
+document.getElementById('confirmPickupBtn').onclick=()=>{
+  order.status='COMPLETED'; order.updatedAt=new Date().toISOString();
+  save(); render(); showToast('Pickup confirmed — order completed');
+  document.getElementById('confirmPickupBtn').hidden=true;
+  document.getElementById('downloadBtn').hidden=false;
+  document.getElementById('completedMsg').hidden=false;
+  setTimeout(()=>{ location.href='./menu.html'; }, 4000);
+};
+
+document.getElementById('downloadBtn').onclick=()=>{
+  const c=document.createElement('canvas'); c.width=390; c.height=520;
+  const ctx=c.getContext('2d'); ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,c.width,c.height);
+  ctx.strokeStyle='#e7e7e4'; ctx.strokeRect(1,1,c.width-2,c.height-2);
+  ctx.fillStyle='#0a0a0a'; ctx.font='700 12px Inter'; ctx.fillText('Boba · Obsidian — Receipt',16,28);
+  ctx.font='500 10px JetBrains Mono'; ctx.fillStyle='#6b6b6b'; ctx.fillText(order.id,16,44);
+  ctx.fillText(new Date(order.createdAt).toLocaleString(),16,58);
+  let y=80; ctx.fillStyle='#0a0a0a'; ctx.font='600 11px Inter';
+  order.items.forEach(it=>{ ctx.fillText(`${it.qty}× ${it.name}`,16,y); const p=fmt(it.price*it.qty); ctx.fillText(p, c.width-16-ctx.measureText(p).width, y); y+=18; });
+  y+=8; ctx.fillStyle='#f4f4f3'; ctx.fillRect(16,y,c.width-32,28); ctx.fillStyle='#0a0a0a'; ctx.font='700 11px Inter'; ctx.fillText('Total',24,y+18); const tot=fmt(order.total); ctx.fillText(tot, c.width-24-ctx.measureText(tot).width, y+18);
+  y+=48; ctx.fillStyle='#6b6b6b'; ctx.font='500 10px Inter'; ctx.fillText('Pickup code: '+order.pickupCode,16,y);
+  const a=document.createElement('a'); a.download='receipt-'+order.id+'.png'; a.href=c.toDataURL('image/png'); a.click();
+};
+
+// live via BroadcastChannel
+try{
+  const ch=new BroadcastChannel('boba:orders');
+  ch.onmessage=(e)=>{
+    if(e.data && e.data.tenant===tenant && e.data.order && e.data.order.id===order.id){
+      order=e.data.order; render();
+      if(e.data.type==='toast') showToast(e.data.msg);
+    }
+  };
+}catch{}
+
+render();
+// poll fallback every 1.5s (if different tab)
+setInterval(()=>{
+  try{
+    const fresh=JSON.parse(localStorage.getItem(key)||'null');
+    if(fresh && fresh.updatedAt!==order.updatedAt){ order=fresh; render(); }
+  }catch{}
+},1500);
+</script>
+</body>
+</html>

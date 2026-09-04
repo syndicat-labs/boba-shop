@@ -165,6 +165,51 @@ img{max-width:100%;height:auto}
   .menu-name{font-size:12px}
   .menu-desc{font-size:10px}
 }
+/* checkout modal — obsidian, plugin-able PSP (mock dev-only) + receipt from receipt1.jpg ref */
+.modal-overlay{position:fixed;inset:0;background:rgba(10,10,10,0.42);display:grid;place-items:center;padding:16px;z-index:50;overflow-y:auto}
+.modal-overlay[hidden]{display:none !important}
+.modal-card{width:100%;max-width:390px;max-height:min(92dvh, 760px);overflow:auto;background:var(--boba-color-bg);border:1px solid var(--boba-color-border-strong);border-radius:var(--boba-radius-md);box-shadow:0 16px 48px rgba(10,10,10,0.22);display:flex;flex-direction:column}
+.modal-head{position:sticky;top:0;background:var(--boba-color-bg);border-bottom:1px solid var(--boba-color-border);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:1}
+.modal-title{font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:700}
+.modal-close{width:32px;height:32px;border:1px solid var(--boba-color-border);background:var(--boba-color-bg);border-radius:var(--boba-radius-sm);display:grid;place-items:center;cursor:pointer}
+.modal-body{padding:16px;display:flex;flex-direction:column;gap:16px}
+.order-lines{display:flex;flex-direction:column;gap:10px}
+.order-line{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:10px 12px;border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-sm);background:var(--boba-color-bg)}
+.order-line-main{min-width:0}
+.order-line-name{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.order-line-meta{font-size:11px;color:var(--boba-color-text-muted);margin-top:2px}
+.order-line-price{font-family:var(--boba-font-mono);font-size:12px;font-weight:600;white-space:nowrap}
+.totals{border:1px solid var(--boba-color-border-strong);border-radius:var(--boba-radius-sm);overflow:hidden}
+.totals-row{display:flex;justify-content:space-between;padding:10px 12px;font-size:12px;border-bottom:1px solid var(--boba-color-border)}
+.totals-row:last-child{border-bottom:none;background:var(--boba-color-bg-subtle);font-weight:700}
+.totals-row strong{font-family:var(--boba-font-mono)}
+.pay-box{border:1px dashed var(--boba-color-border);border-radius:var(--boba-radius-sm);padding:12px;background:var(--boba-color-bg-subtle);display:flex;flex-direction:column;gap:10px}
+.pay-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--boba-color-text-muted);font-weight:600}
+.pay-method{border:1px solid var(--boba-color-border);background:var(--boba-color-bg);border-radius:var(--boba-radius-sm);padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.pay-method-name{font-size:12px;font-weight:700}
+.pay-method-sub{font-size:11px;color:var(--boba-color-text-muted)}
+.pay-cta{width:100%;padding:14px 16px;background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse);border:1px solid var(--boba-color-border-strong);border-radius:var(--boba-radius-sm);font-size:12px;letter-spacing:0.08em;text-transform:uppercase;font-weight:700;cursor:pointer}
+.pay-cta:disabled{opacity:0.4;cursor:default}
+.pay-cta:not(:disabled):hover{opacity:0.92}
+.receipt-card{border:1px solid var(--boba-color-border-strong);border-radius:var(--boba-radius-md);overflow:hidden;background:var(--boba-color-bg)}
+.receipt-head{padding:14px 16px;display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:1px solid var(--boba-color-border)}
+.receipt-id{font-family:var(--boba-font-mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--boba-color-text-muted)}
+.receipt-date{font-family:var(--boba-font-mono);font-size:11px;color:var(--boba-color-text-muted)}
+.receipt-title{font-size:13px;font-weight:800;letter-spacing:-0.01em;margin-top:4px}
+.receipt-body{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.receipt-lines{border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-sm);overflow:hidden}
+.receipt-line{display:flex;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--boba-color-border);font-size:11px}
+.receipt-line:last-child{border-bottom:none}
+.receipt-qr{border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-sm);padding:12px;display:flex;gap:12px;align-items:center;background:var(--boba-color-bg-subtle)}
+.receipt-qr img{width:84px;height:84px;border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-sm);background:#fff}
+.receipt-qr-code{font-family:var(--boba-font-mono);font-size:18px;font-weight:800;letter-spacing:0.08em}
+.receipt-actions{display:flex;gap:8px}
+.receipt-actions button{flex:1;padding:12px;border-radius:var(--boba-radius-sm);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;font-weight:700;cursor:pointer}
+.btn-ghost{border:1px solid var(--boba-color-border);background:var(--boba-color-bg);color:var(--boba-color-text)}
+.btn-primary{border:1px solid var(--boba-color-border-strong);background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse)}
+.toast-stack{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:8px;pointer-events:none;max-width:min(90vw, 390px)}
+.toast{pointer-events:auto;background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse);border:1px solid var(--boba-color-border-strong);border-radius:var(--boba-radius-sm);padding:10px 12px;font-size:11px;letter-spacing:0.02em;display:flex;justify-content:space-between;gap:12px;align-items:center;box-shadow:0 8px 24px rgba(10,10,10,0.18)}
+.toast button{border:1px solid rgba(255,255,255,0.2);background:transparent;color:var(--boba-color-text-inverse);padding:4px 8px;border-radius:var(--boba-radius-sm);font-size:10px;cursor:pointer}
 @media (min-width:391px){
   body{box-shadow:0 0 0 1px var(--boba-color-border)}
 }
@@ -282,8 +327,59 @@ img{max-width:100%;height:auto}
   <a class="nav-item nav-item--active"><span class="nav-icon">≡</span>Menu</a>
   <a class="nav-item"><span class="nav-icon">♡</span>Favorites</a>
   <a class="nav-item" id="bottomCart"><span class="nav-icon">⧉</span><span id="bottomCartLabel">Cart · ₵0.00</span></a>
-  <a class="nav-item"><span class="nav-icon">◈</span>Orders</a>
+  <a class="nav-item" id="ordersNav"><span class="nav-icon">◈</span>Orders</a>
 </nav>
+
+<div id="checkoutModal" class="modal-overlay" hidden aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-head">
+      <div class="modal-title" id="modalTitle">Payment details</div>
+      <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="paymentView">
+      <div class="order-lines" id="orderLines"></div>
+      <div class="totals" id="totalsBox"></div>
+      <div class="pay-box">
+        <div class="pay-label">Payment — dev mock engine (plugin-able PSP deferred)</div>
+        <div class="pay-method">
+          <div><div class="pay-method-name">Mock PSP</div><div class="pay-method-sub">Dev only — no real charge · GH₵ via mock</div></div>
+          <span class="badge badge--accent">DEV</span>
+        </div>
+        <button class="pay-cta" id="payBtn">Pay securely →</button>
+        <div style="font-size:10px;color:var(--boba-color-text-muted);line-height:1.4">By paying, you agree to pickup within 30m of “Ready”. Code expires. Hosting via cloudflared dev tunnel. Multi-tenant.</div>
+      </div>
+    </div>
+    <div class="modal-body" id="receiptView" hidden>
+      <div class="receipt-card" id="receiptCard">
+        <div class="receipt-head">
+          <div>
+            <div class="receipt-id" id="receiptId">ORDER #—</div>
+            <div class="receipt-title" id="receiptTitle">Payment successful</div>
+            <div class="receipt-date" id="receiptDate">—</div>
+          </div>
+          <div class="badge badge--accent" style="align-self:flex-start">Paid</div>
+        </div>
+        <div class="receipt-body">
+          <div class="receipt-lines" id="receiptLines"></div>
+          <div class="receipt-qr">
+            <img id="receiptQr" alt="Pickup QR" width="84" height="84" />
+            <div>
+              <div style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--boba-color-text-muted)">Pickup code</div>
+              <div class="receipt-qr-code" id="receiptCode">—</div>
+              <div style="font-size:10px;color:var(--boba-color-text-muted);margin-top:4px" id="receiptExpiry">—</div>
+              <div style="font-size:10px;color:var(--boba-color-text-muted)">Show at counter. Visible to staff.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="receipt-actions">
+        <button class="btn-ghost" id="downloadReceiptBtn">Download receipt</button>
+        <button class="btn-primary" id="trackOrderBtn">Track order →</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="toastStack" class="toast-stack" aria-live="polite"></div>
 
 <script>
 const cart = new Map();
@@ -356,19 +452,152 @@ menuList.addEventListener('click', (e)=>{
   }
 });
 
-liveCta.addEventListener('click', ()=>{
-  if(cart.size===0) return;
-  let lines = [];
-  let total = 0;
+const checkoutModal = document.getElementById('checkoutModal');
+const paymentView = document.getElementById('paymentView');
+const receiptView = document.getElementById('receiptView');
+const orderLinesEl = document.getElementById('orderLines');
+const totalsBoxEl = document.getElementById('totalsBox');
+const payBtn = document.getElementById('payBtn');
+const receiptIdEl = document.getElementById('receiptId');
+const receiptDateEl = document.getElementById('receiptDate');
+const receiptLinesEl = document.getElementById('receiptLines');
+const receiptQrEl = document.getElementById('receiptQr');
+const receiptCodeEl = document.getElementById('receiptCode');
+const receiptExpiryEl = document.getElementById('receiptExpiry');
+let lastOrder = null;
+
+function openModal(){
+  checkoutModal.hidden = false;
+  checkoutModal.setAttribute('aria-hidden','false');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  checkoutModal.hidden = true;
+  checkoutModal.setAttribute('aria-hidden','true');
+  document.body.style.overflow='';
+  paymentView.hidden = false;
+  receiptView.hidden = true;
+  payBtn.disabled = false;
+  payBtn.textContent = 'Pay securely →';
+}
+document.getElementById('modalClose').addEventListener('click', closeModal);
+checkoutModal.addEventListener('click', (e)=>{ if(e.target===checkoutModal) closeModal(); });
+
+function renderPaymentDetails(){
+  const lines = [];
+  let subtotal = 0;
   for(const [id,qty] of cart){
     const row = menuList.querySelector(`[data-id="${id}"]`);
     const name = row.dataset.name;
     const price = parseFloat(row.dataset.price);
-    lines.push(qty + '× ' + name + ' — ' + fmt(price*qty));
-    total += price*qty;
+    const lineTotal = price*qty;
+    subtotal += lineTotal;
+    lines.push({name, qty, price, lineTotal});
   }
-  alert('Checkout — ' + lines.join('\\n') + '\\n\\nTotal: ' + fmt(total) + '\\n\\nDelivery optional next step.');
+  orderLinesEl.innerHTML = lines.map(l=>`
+    <div class="order-line">
+      <div class="order-line-main"><div class="order-line-name">${l.qty}× ${l.name}</div><div class="order-line-meta">Unit ${fmt(l.price)}</div></div>
+      <div class="order-line-price">${fmt(l.lineTotal)}</div>
+    </div>
+  `).join('');
+  const total = subtotal; // fees 0 for now
+  totalsBoxEl.innerHTML = `
+    <div class="totals-row"><span>Subtotal</span><strong>${fmt(subtotal)}</strong></div>
+    <div class="totals-row"><span>Total · GH₵</span><strong>${fmt(total)}</strong></div>
+  `;
+}
+
+liveCta.addEventListener('click', ()=>{
+  if(cart.size===0) return;
+  renderPaymentDetails();
+  openModal();
 });
+
+payBtn.addEventListener('click', async ()=>{
+  payBtn.disabled = true;
+  payBtn.textContent = 'Processing…';
+  // dev mock PSP: 900ms delay then success
+  await new Promise(r=>setTimeout(r, 900));
+  const orderId = 'BOBA-' + Math.random().toString(36).slice(2,7).toUpperCase() + '-' + Date.now().toString(36).toUpperCase();
+  const now = new Date();
+  const pickupCode = String(1000 + Math.floor(Math.random()*9000));
+  const expires = new Date(now.getTime()+30*60000);
+  const items = [];
+  let total=0;
+  for(const [id,qty] of cart){
+    const row = menuList.querySelector(`[data-id="${id}"]`);
+    const name=row.dataset.name; const price=parseFloat(row.dataset.price);
+    items.push({id,qty,name,price});
+    total+= price*qty;
+  }
+  lastOrder = {id:orderId, items, total, currency:'GHS', createdAt: now.toISOString(), pickupCode, pickupExpiresAt: expires.toISOString(), status:'SENT'};
+  // persist for tracking (multi-tenant stub: tenant slug=boba-obsidian)
+  const tenant='boba-obsidian';
+  const key=`boba:tenant:${tenant}:order:${orderId}`;
+  localStorage.setItem(key, JSON.stringify(lastOrder));
+  localStorage.setItem('boba:lastOrderId', orderId);
+  // also broadcast for admin dev
+  try{ const ch=new BroadcastChannel('boba:orders'); ch.postMessage({type:'order:sent', tenant, order:lastOrder}); ch.close(); }catch{}
+  // receipt view
+  receiptIdEl.textContent = 'ORDER ' + orderId;
+  receiptDateEl.textContent = now.toLocaleString('en-GH', {dateStyle:'medium', timeStyle:'short'});
+  receiptLinesEl.innerHTML = items.map(it=>`<div class="receipt-line"><span>${it.qty}× ${it.name}</span><strong>${fmt(it.price*it.qty)}</strong></div>`).join('') + `<div class="receipt-line"><span>Total</span><strong>${fmt(total)}</strong></div>`;
+  receiptCodeEl.textContent = pickupCode;
+  receiptExpiryEl.textContent = 'Expires ' + expires.toLocaleTimeString('en-GH', {hour:'2-digit', minute:'2-digit'});
+  // QR via api (dev)
+  receiptQrEl.src = 'https://api.qrserver.com/v1/create-qr-code/?size=84x84&data=' + encodeURIComponent(orderId+'|'+pickupCode);
+  paymentView.hidden = true;
+  receiptView.hidden = false;
+  payBtn.textContent = 'Paid ✓';
+  // toast sent
+  showToast('Order sent — awaiting admin confirmation', 'View tracking');
+  // keep cart for now, will clear on tracking
+});
+
+document.getElementById('downloadReceiptBtn').addEventListener('click', ()=>{
+  if(!lastOrder) return;
+  // simple canvas receipt for download
+  const c=document.createElement('canvas'); c.width=390; c.height=520;
+  const ctx=c.getContext('2d'); if(!ctx) return;
+  ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,c.width,c.height);
+  ctx.strokeStyle='#e7e7e4'; ctx.strokeRect(1,1,c.width-2,c.height-2);
+  ctx.fillStyle='#0a0a0a'; ctx.font='700 12px Inter'; ctx.fillText('Boba · Obsidian — Receipt',16,28);
+  ctx.font='500 10px JetBrains Mono'; ctx.fillStyle='#6b6b6b'; ctx.fillText(lastOrder.id,16,44);
+  ctx.fillText(new Date(lastOrder.createdAt).toLocaleString(),16,58);
+  let y=80; ctx.fillStyle='#0a0a0a'; ctx.font='600 11px Inter';
+  lastOrder.items.forEach(it=>{ ctx.fillText(`${it.qty}× ${it.name}`,16,y); ctx.fillText(fmt(it.price*it.qty), c.width-16-ctx.measureText(fmt(it.price*it.qty)).width, y); y+=18; });
+  y+=8; ctx.fillStyle='#f4f4f3'; ctx.fillRect(16,y,c.width-32,28); ctx.fillStyle='#0a0a0a'; ctx.font='700 11px Inter'; ctx.fillText('Total',16+8,y+18); ctx.fillText(fmt(lastOrder.total), c.width-16-8-ctx.measureText(fmt(lastOrder.total)).width, y+18);
+  y+=48; ctx.fillStyle='#6b6b6b'; ctx.font='500 10px Inter'; ctx.fillText('Pickup code: '+lastOrder.pickupCode+' (show at counter)',16,y);
+  const a=document.createElement('a'); a.download='receipt-'+lastOrder.id+'.png'; a.href=c.toDataURL('image/png'); a.click();
+});
+
+document.getElementById('trackOrderBtn').addEventListener('click', ()=>{
+  if(!lastOrder) return;
+  // clear cart and go to tracking
+  cart.clear(); sync();
+  closeModal();
+  location.href = './tracking.html?id=' + encodeURIComponent(lastOrder.id) + '&tenant=boba-obsidian';
+});
+
+document.getElementById('ordersNav').addEventListener('click', (e)=>{
+  e.preventDefault();
+  const last = localStorage.getItem('boba:lastOrderId');
+  if(last) location.href='./tracking.html?id='+encodeURIComponent(last)+'&tenant=boba-obsidian';
+  else showToast('No orders yet — add bobas and checkout','');
+});
+
+function showToast(msg, action){
+  const stack=document.getElementById('toastStack');
+  const t=document.createElement('div'); t.className='toast';
+  t.innerHTML=`<span>${msg}</span>` + (action?`<button>${action}</button>`:'') + `<button aria-label="Dismiss">✕</button>`;
+  const btns=t.querySelectorAll('button');
+  btns.forEach(b=>b.addEventListener('click', ()=>{
+    if(b.textContent==='View tracking' && lastOrder) location.href='./tracking.html?id='+encodeURIComponent(lastOrder.id)+'&tenant=boba-obsidian';
+    t.remove();
+  }));
+  stack.appendChild(t);
+  setTimeout(()=> t.remove(), 4200);
+}
 
 document.getElementById('bannerView').addEventListener('click', ()=>{
   const el = menuList.querySelector('[data-id="brown-sugar"]');
