@@ -3,14 +3,15 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Tracking — Boba · Obsidian</title>
+<title>Tracking — e-town boba</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
 :root{--boba-color-bg:#ffffff;--boba-color-bg-subtle:#f4f4f3;--boba-color-bg-elevated:#ffffff;--boba-color-bg-inverse:#0a0a0a;--boba-color-text:#0a0a0a;--boba-color-text-muted:#6b6b6b;--boba-color-text-inverse:#ffffff;--boba-color-text-faint:#9a9a9a;--boba-color-border:#e7e7e4;--boba-color-border-strong:#0a0a0a;--boba-font-body:'Inter',system-ui,sans-serif;--boba-font-mono:'JetBrains Mono',monospace;--boba-radius-sm:4px;--boba-radius-md:6px;--boba-radius-pill:999px;--boba-duration-fast:150ms;--boba-ease:cubic-bezier(0.2,0,0,1)}
 *{box-sizing:border-box;margin:0;padding:0;max-width:100%}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:clip;max-width:100vw}
 body{font-family:var(--boba-font-body);background:var(--boba-color-bg);color:var(--boba-color-text);-webkit-font-smoothing:antialiased;width:100%;max-width:min(100vw,390px);margin:0 auto;min-height:100dvh;min-height:100svh;overflow-x:clip}
-@media (max-width:392px){body{border-left:none;border-right:none}}
+@media (max-width:392px){body{border-left:none;border-right:none;padding:0 12px}}
+@media (max-width:380px){.complete-overlay{padding:20px} .complete-card{margin:0 8px}}
 button{font:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 :focus-visible{outline:2px solid var(--boba-color-border-strong);outline-offset:2px}
 img{max-width:100%}
@@ -29,11 +30,12 @@ img{max-width:100%}
 .steps{display:flex;flex-direction:column;gap:0}
 .step{display:flex;gap:12px;position:relative;padding-bottom:18px}
 .step:last-child{padding-bottom:0}
-.step-line{position:absolute;left:15px;top:32px;bottom:-2px;width:1px;background:var(--boba-color-border)}
+.step-line{position:absolute;left:15px;top:32px;bottom:-2px;width:2px;background:var(--boba-color-border)}
 .step:last-child .step-line{display:none}
-.step-icon{width:32px;height:32px;border-radius:50%;border:1px solid var(--boba-color-border);background:var(--boba-color-bg);display:grid;place-items:center;font-size:14px;flex-shrink:0;position:relative;z-index:1}
-.step--done .step-icon{border-color:var(--boba-color-border-strong);background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse)}
-.step--active .step-icon{border-color:var(--boba-color-border-strong);background:var(--boba-color-bg);color:var(--boba-color-text);box-shadow:0 0 0 4px rgba(10,10,10,0.08)}
+.step--done .step-line{background:#16A34A}
+.step-icon{width:32px;height:32px;border-radius:50%;border:2px solid var(--boba-color-border);background:var(--boba-color-bg);flex-shrink:0;position:relative;z-index:1}
+.step--done .step-icon,.step--active .step-icon{background:#16A34A;border-color:#16A34A}
+.pickup-box--disabled{opacity:0.45;pointer-events:none;filter:grayscale(0.15);background:#f4f4f3 !important}
 .step-main{flex:1;min-width:0;padding-top:4px}
 .step-title{font-size:12px;font-weight:700}
 .step-desc{font-size:11px;color:var(--boba-color-text-muted);margin-top:2px}
@@ -54,6 +56,13 @@ img{max-width:100%}
 .admin-actions button{padding:8px 10px;font-size:11px;border:1px solid var(--boba-color-border-strong);background:#fff;border-radius:4px;cursor:pointer;font-weight:600}
 .toast-stack{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:8px;max-width:min(90vw,390px)}
 .toast{background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse);border:1px solid var(--boba-color-border-strong);border-radius:4px;padding:10px 12px;font-size:11px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.complete-overlay{position:fixed;inset:0;background:rgba(10,10,10,0.42);display:grid;place-items:center;padding:24px;z-index:70;overflow-y:auto}
+.complete-overlay[hidden]{display:none !important}
+.complete-card{width:100%;max-width:350px;background:var(--boba-color-bg);border:1px solid var(--boba-color-border-strong);border-radius:6px;overflow:hidden;box-shadow:0 16px 48px rgba(10,10,10,0.22)}
+.complete-head{padding:20px 16px 0;text-align:center}
+.complete-title{font-size:14px;font-weight:800;letter-spacing:-0.01em}
+.complete-sub{font-size:11px;color:var(--boba-color-text-muted);margin-top:6px;line-height:1.5}
+.complete-actions{padding:16px;display:flex;flex-direction:column;gap:8px}
 </style>
 </head>
 <body>
@@ -66,7 +75,7 @@ img{max-width:100%}
 <div class="card">
   <div class="card-head">
     <div>
-      <div class="card-head-left" id="cardTenant">Boba · Obsidian</div>
+      <div class="card-head-left" id="cardTenant">e-town boba</div>
       <div style="font-size:12px;font-weight:700;margin-top:2px" id="cardOrderId">ORDER —</div>
     </div>
     <div class="card-head-right" id="cardStatus">SENT</div>
@@ -118,6 +127,20 @@ img{max-width:100%}
 
 <div id="toastStack" class="toast-stack"></div>
 
+<div id="completeModal" class="complete-overlay" hidden aria-hidden="true">
+  <div class="complete-card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+    <div class="complete-head">
+      <div style="font-size:28px">✓</div>
+      <div class="complete-title" id="completeTitle">Order completed — thank you!</div>
+      <div class="complete-sub">Your boba is picked up. Receipt is ready to download. Take your time, then head back to menu.</div>
+    </div>
+    <div class="complete-actions">
+      <button class="btn btn-ghost" id="modalDownloadBtn">Download receipt image</button>
+      <button class="btn btn-primary" id="modalBackBtn">← Back to menu</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const params = new URLSearchParams(location.search);
 const orderId = params.get('id');
@@ -130,7 +153,6 @@ if(!order){ document.body.innerHTML='<div style="padding:24px;text-align:center"
 const STATUS = ['SENT','RECEIVED','PROCESSING','READY','AWAITING_PICKUP'];
 const LABELS = {SENT:'Order sent', RECEIVED:'Order received', PROCESSING:'Processing', READY:'Ready', AWAITING_PICKUP:'Awaiting pickup'};
 const DESCS = {SENT:'Awaiting admin confirmation', RECEIVED:'Confirmed by admin', PROCESSING:'Kitchen preparing', READY:'Ready for pickup', AWAITING_PICKUP:'Show code at counter'};
-const ICONS = {SENT:'◈', RECEIVED:'✓', PROCESSING:'◍', READY:'✦', AWAITING_PICKUP:'◉'};
 
 function fmt(n){ return '₵'+Number(n).toFixed(2); }
 function showToast(msg){
@@ -162,7 +184,7 @@ function render(){
     const active = i===effectiveIdx && !isCompleted;
     const time = order.updatedAt ? new Date(order.updatedAt).toLocaleTimeString('en-GH',{hour:'2-digit',minute:'2-digit'}) : '';
     return `<div class="step ${done?'step--done':''} ${active?'step--active':''}">
-      <div class="step-icon">${ICONS[s]}</div>
+      <div class="step-icon" aria-hidden="true"></div>
       <div class="step-line"></div>
       <div class="step-main"><div class="step-title">${LABELS[s]}</div><div class="step-desc">${DESCS[s]}</div></div>
       <div class="step-time">${time}</div>
@@ -174,13 +196,14 @@ function render(){
   const confirmBtn=document.getElementById('confirmPickupBtn');
   const downloadBtn=document.getElementById('downloadBtn');
   const completedMsg=document.getElementById('completedMsg');
-  if(order.status==='AWAITING_PICKUP' || order.status==='READY'){
-    if(order.pickupCode){
-      pickupBox.hidden=false;
-      document.getElementById('pickupCode').textContent=order.pickupCode;
-      document.getElementById('pickupExpiry').textContent='Expires '+new Date(order.pickupExpiresAt).toLocaleTimeString();
-      document.getElementById('pickupQr').src='https://api.qrserver.com/v1/create-qr-code/?size=72x72&data='+encodeURIComponent(order.id+'|'+order.pickupCode);
-    }
+  // pickup code + QR rendered at all times after payment, but gray disabled until READY
+  if(order.pickupCode){
+    pickupBox.hidden=false;
+    document.getElementById('pickupCode').textContent=order.pickupCode;
+    document.getElementById('pickupExpiry').textContent='Expires '+new Date(order.pickupExpiresAt).toLocaleTimeString();
+    document.getElementById('pickupQr').src='https://api.qrserver.com/v1/create-qr-code/?size=72x72&data='+encodeURIComponent(order.id+'|'+order.pickupCode);
+    const isReadyStage = ['READY','AWAITING_PICKUP','COMPLETED'].includes(order.status);
+    pickupBox.classList.toggle('pickup-box--disabled', !isReadyStage);
   } else {
     pickupBox.hidden=true;
   }
@@ -190,13 +213,18 @@ function render(){
   } else if(order.status==='COMPLETED'){
     codeInput.hidden=true;
     confirmBtn.hidden=true;
-    downloadBtn.hidden=false;
-    completedMsg.hidden=false;
+    downloadBtn.hidden=true;
+    completedMsg.hidden=true;
+    // show complete modal instead of inline message + auto redirect
+    const modal=document.getElementById('completeModal');
+    if(modal.hidden){ modal.hidden=false; modal.setAttribute('aria-hidden','false'); }
   } else {
     codeInput.hidden=true;
     confirmBtn.hidden=true;
     downloadBtn.hidden=true;
     completedMsg.hidden=true;
+    const modal=document.getElementById('completeModal');
+    if(modal){ modal.hidden=true; modal.setAttribute('aria-hidden','true'); }
   }
   // admin button states
   document.getElementById('adminReceived').disabled = order.status!=='SENT';
@@ -243,16 +271,24 @@ document.getElementById('confirmPickupBtn').onclick=()=>{
   order.status='COMPLETED'; order.updatedAt=new Date().toISOString();
   save(); render(); showToast('Pickup confirmed — order completed');
   document.getElementById('confirmPickupBtn').hidden=true;
-  document.getElementById('downloadBtn').hidden=false;
-  document.getElementById('completedMsg').hidden=false;
-  setTimeout(()=>{ location.href='./menu.html'; }, 4000);
+  // modal will be shown via render() when status is COMPLETED
 };
+
+document.getElementById('modalDownloadBtn').onclick=()=>{
+  document.getElementById('downloadBtn').click();
+};
+document.getElementById('modalBackBtn').onclick=()=>{
+  location.href='./menu.html';
+};
+document.getElementById('completeModal').addEventListener('click', (e)=>{
+  if(e.target.id==='completeModal') e.currentTarget.hidden=true;
+});
 
 document.getElementById('downloadBtn').onclick=()=>{
   const c=document.createElement('canvas'); c.width=390; c.height=520;
   const ctx=c.getContext('2d'); ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,c.width,c.height);
   ctx.strokeStyle='#e7e7e4'; ctx.strokeRect(1,1,c.width-2,c.height-2);
-  ctx.fillStyle='#0a0a0a'; ctx.font='700 12px Inter'; ctx.fillText('Boba · Obsidian — Receipt',16,28);
+  ctx.fillStyle='#0a0a0a'; ctx.font='700 12px Inter'; ctx.fillText('e-town boba — Receipt',16,28);
   ctx.font='500 10px JetBrains Mono'; ctx.fillStyle='#6b6b6b'; ctx.fillText(order.id,16,44);
   ctx.fillText(new Date(order.createdAt).toLocaleString(),16,58);
   let y=80; ctx.fillStyle='#0a0a0a'; ctx.font='600 11px Inter';

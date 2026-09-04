@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en" data-theme="boba-obsidian">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Admin Banners — e-town boba</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--boba-color-bg:#fff;--boba-color-bg-subtle:#f4f4f3;--boba-color-border:#e7e7e4;--boba-color-border-strong:#0a0a0a;--boba-color-text:#0a0a0a;--boba-color-text-muted:#6b6b6b;--boba-font-body:'Inter',system-ui,sans-serif;--boba-radius-sm:4px;--boba-radius-md:6px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--boba-font-body);max-width:min(100vw,390px);margin:0 auto;padding:0 12px;min-height:100dvh}
+.header{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--boba-color-border);padding:10px 16px;display:flex;justify-content:space-between;align-items:center}
+.card{margin:12px 0 0;border:1px solid var(--boba-color-border);border-radius:6px;overflow:hidden}
+.preview{margin:12px 0 0;border:1px solid #0a0a0a;border-radius:4px;overflow:hidden}
+.preview .banner{margin:0;background:#0a0a0a;color:#fff;border-radius:0;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+input,select{width:100%;padding:10px;border:1px solid var(--boba-color-border);border-radius:4px;font:inherit}
+.btn{padding:12px;border-radius:4px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;font-weight:700;cursor:pointer;width:100%}
+.btn-primary{background:#0a0a0a;color:#fff;border:1px solid #0a0a0a}
+.btn-ghost{background:#fff;border:1px solid var(--boba-color-border)}
+</style>
+</head>
+<body>
+<header class="header"><a href="./menu.html" style="text-decoration:none;color:inherit">← Menu</a><strong style="font-size:12px;letter-spacing:0.12em;text-transform:uppercase">Admin — Banners</strong><span style="font-size:11px;color:#6b6b6b">OWNER</span></header>
+
+<div class="preview" id="preview">
+  <div class="banner"><div><div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;opacity:0.6" id="pKicker">House · Batch at :00</div><div style="font-size:13px;font-weight:700" id="pTitle">Brown Sugar — brewed Taichung way</div></div><button style="border:1px solid rgba(255,255,255,0.22);background:transparent;color:#fff;padding:8px 12px;border-radius:4px" id="pCta">View →</button></div>
+</div>
+
+<div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+  <input id="kicker" placeholder="Kicker (40)" maxlength="40" value="House · Batch at :00" />
+  <input id="title" placeholder="Title (120)" maxlength="120" value="Brown Sugar — brewed Taichung way" />
+  <div style="display:flex;gap:8px"><input id="ctaLabel" placeholder="CTA View →" value="View →" style="flex:1"/><select id="ctaType"><option value="sku">sku</option><option value="url">url</option><option value="anchor">anchor</option></select></div>
+  <input id="ctaValue" placeholder="sku / url / anchor" value="brown-sugar" />
+  <input id="mediaUrl" placeholder="Sponsor media URL (optional)" />
+  <button class="btn btn-primary" id="publishBtn">Publish live → (WS + mock)</button>
+  <button class="btn btn-ghost" id="mockBtn">Inject mock feed 8s (dev)</button>
+  <div style="font-size:10px;color:#6b6b6b;line-height:1.4">Saves to <code>POST /api/v1/tenants/{tid}/banners</code> in prod (OWNER only). Dev: publishes to <code>BroadcastChannel('boba:banners')</code> + <code>localStorage boba:tenant:boba-obsidian:banners:active</code> so customer sees &lt;2s. Use dev console: <code>setBannerEvents([...])</code> or <code>tickBanner()</code>.</div>
+</div>
+
+<script>
+const $ = id=>document.getElementById(id);
+const preview = ()=>{ $('pKicker').textContent=$('kicker').value||'—'; $('pTitle').textContent=$('title').value||'—'; $('pCta').textContent=$('ctaLabel').value||'View →'; };
+['kicker','title','ctaLabel'].forEach(id=>$(id).addEventListener('input', preview));
+$('publishBtn').onclick=()=>{
+  const ev={kicker:$('kicker').value, title:$('title').value, cta_label:$('ctaLabel').value, cta_type:$('ctaType').value, cta_value:$('ctaValue').value, media_url:$('mediaUrl').value||null, at:new Date().toISOString(), mock:false};
+  // prod: fetch POST, dev fallback:
+  try{
+    const ch=new BroadcastChannel('boba:banners'); ch.postMessage({type:'banner:event', payload:ev}); ch.close();
+    localStorage.setItem('boba:tenant:boba-obsidian:banners:active', JSON.stringify(ev));
+    window.dispatchEvent(new CustomEvent('boba:banner',{detail:ev}));
+  }catch{}
+  alert('Published to tenant boba-obsidian — open menu.html in another tab/window to see <2s');
+  preview();
+};
+$('mockBtn').onclick=()=>{
+  // load mock feed if not already
+  const s=document.createElement('script'); s.src='../shared/mockLiveFeed.js'; document.head.appendChild(s);
+  s.onload=()=>{ setTimeout(()=> window.tickBanner&&window.tickBanner(), 300); alert('Mock feed started 8s interval — check menu.html'); };
+};
+preview();
+</script>
+</body>
+</html>
