@@ -17,10 +17,10 @@ class AppError(Exception):
     category: ErrorCategory
     code: str
     message: str
-    context: dict
+    context: dict[str, object]
     retryable: bool = False
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, object]:
         return {
             "category": self.category.value,
             "code": self.code,

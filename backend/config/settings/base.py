@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+
 import dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -24,6 +25,10 @@ INSTALLED_APPS = [
     "core.tenants",
     "core.users",
     "core.orders",
+    "core.banners",
+    "core.catalog",
+    "core.payments",
+    "core.scheduling",
 ]
 
 MIDDLEWARE = [
@@ -33,6 +38,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "api.v1.middleware.TenantAwareMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -40,6 +46,21 @@ MIDDLEWARE = [
 ROOT_URLCONF = "config.urls"
 WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
+
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+            ],
+        },
+    },
+]
 
 DATABASES = {
     "default": {
@@ -54,17 +75,25 @@ DATABASES = {
 
 AUTH_USER_MODEL = "users.User"
 
+# Emails are tenant-scoped (unique_together tenant,email); email is not globally
+# unique, so Django's USERNAME_FIELD uniqueness check is not applicable here.
+AUTHENTICATION_BACKENDS = ["core.users.backends.TenantBackend"]
+SILENCED_SYSTEM_CHECKS = ["auth.E003"]
+
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_TZ = True
 STATIC_URL = "/static/"
+# Uploaded product images. In docker this is a shared volume served by nginx at /media/.
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.getenv("MEDIA_ROOT", str(BASE_DIR / "media"))
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ["rest_framework.authentication.SessionAuthentication"],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.CursorPagination",
-    "PAGE_SIZE": 20,
+    "EXCEPTION_HANDLER": "api.exceptions.boba_exception_handler",
+    "DEFAULT_THROTTLE_RATES": {"pickup_verify": "5/min"},
 }
 
 CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:4200").split(",")

@@ -1,9 +1,11 @@
 import uuid
+from typing import ClassVar
+
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
 
-class UserManager(BaseUserManager):
+class UserManager(BaseUserManager["User"]):
     def create_user(self, email: str, tenant, password: str | None = None, **extra):  # type: ignore[no-untyped-def]
         if not email:
             raise ValueError("email required")
@@ -26,7 +28,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         OWNER = "OWNER", "Owner"
         STAFF = "STAFF", "Staff"
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid7, editable=False)  # type: ignore[attr-defined]
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     tenant = models.ForeignKey("tenants.Tenant", on_delete=models.CASCADE, related_name="users")
     email = models.EmailField()
     role = models.CharField(max_length=10, choices=Role.choices, default=Role.STAFF)
@@ -34,10 +36,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    objects = UserManager()  # type: ignore[assignment]
+    objects = UserManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS: list[str] = []
+    REQUIRED_FIELDS: ClassVar[list[str]] = []
 
     class Meta:
         db_table = "users"

@@ -1,8 +1,8 @@
-from dataclasses import dataclass, field
-from datetime import datetime, timedelta, timezone
 import secrets
-from enum import Enum
 import uuid
+from dataclasses import dataclass, field
+from datetime import UTC, datetime, timedelta
+from enum import Enum
 
 
 class OrderStatus(str, Enum):
@@ -46,8 +46,8 @@ class Order:
     pickup_code: str | None = None
     pickup_expires_at: datetime | None = None
     receipt_s3_key: str | None = None
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     def assert_can_transition(self, to: OrderStatus) -> None:
         from core.errors import taxonomy as err
@@ -62,7 +62,7 @@ class Order:
     def generate_pickup_code(self) -> str:
         code = f"{secrets.randbelow(9000)+1000:04d}"
         self.pickup_code = code
-        self.pickup_expires_at = datetime.now(timezone.utc) + timedelta(minutes=30)
+        self.pickup_expires_at = datetime.now(UTC) + timedelta(minutes=30)
         return code
 
     def verify_pickup_code(self, code: str) -> bool:
@@ -72,7 +72,7 @@ class Order:
             raise err.validation("PICKUP_WRONG_STATUS", "Order not awaiting pickup", {"status": self.status})
         if not self.pickup_code or not self.pickup_expires_at:
             raise err.validation("PICKUP_NO_CODE", "No pickup code generated", {})
-        if datetime.now(timezone.utc) > self.pickup_expires_at:
+        if datetime.now(UTC) > self.pickup_expires_at:
             raise err.validation("PICKUP_EXPIRED", "Pickup code expired", {"expires": self.pickup_expires_at.isoformat()})
         if self.pickup_code != code:
             raise err.validation("PICKUP_MISMATCH", "Pickup code mismatch", {})

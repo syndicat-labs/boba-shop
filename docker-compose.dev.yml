@@ -5,7 +5,7 @@ services:
       POSTGRES_DB: boba
       POSTGRES_USER: boba
       POSTGRES_PASSWORD: boba
-    ports: ["5432:5432"]
+    ports: ["5433:5432"]
     volumes: [postgres_data:/var/lib/postgresql/data]
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U boba"]
@@ -31,24 +31,38 @@ services:
 
   web:
     build: ./backend
-    command: sh -c "python manage.py migrate && daphne -b 0.0.0.0 -p 8000 config.asgi:application"
+    command: sh -c "python manage.py migrate && python manage.py seed_demo && daphne -b 0.0.0.0 -p 8000 config.asgi:application"
     env_file: ./backend/.env
     environment:
       DJANGO_SETTINGS_MODULE: config.settings.dev
       DEV_MOCK_PSP: "1"
       PSP_ACTIVE: "mock"
+      MEDIA_ROOT: /media
     ports: ["8000:8000"]
     depends_on:
       postgres: {condition: service_healthy}
       redis: {condition: service_healthy}
-    volumes: ["./backend:/app"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('127.0.0.1',8000),2)"]
+      interval: 5s
+      retries: 20
+      start_period: 15s
+    volumes:
+      - "./backend:/app"
+      - "media_data:/media"
 
   nginx:
     image: nginx:alpine
     ports: ["80:80"]
-    volumes: ["./nginx/nginx.dev.conf:/etc/nginx/nginx.conf:ro"]
-    depends_on: [web]
+    volumes:
+      - "./nginx/nginx.dev.conf:/etc/nginx/nginx.conf:ro"
+      - "./frontend/dist/boba-shop/browser:/usr/share/nginx/html:ro"
+      - "./assets:/srv/assets:ro"
+      - "media_data:/srv/media:ro"
+    depends_on:
+      web: {condition: service_healthy}
 
 volumes:
   postgres_data:
   minio_data:
+  media_data:

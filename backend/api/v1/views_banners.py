@@ -1,33 +1,31 @@
-from rest_framework import viewsets, permissions
-from rest_framework.response import Response
-from django.utils import timezone
+import logging
+
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from django.utils import timezone
+from rest_framework import permissions, viewsets
+
 from core.banners.models import Banner, BannerEvent
+from core.errors import taxonomy as err
+
+from .permissions import IsOwner, TenantMixin
 from .serializers import BannerSerializer
-from core.errors.taxonomy import authorization
+
+logger = logging.getLogger(__name__)
 
 
-class IsOwner(permissions.BasePermission):
-    def has_permission(self, request, view):  # type: ignore[no-untyped-def]
-        return bool(request.user and request.user.is_authenticated and getattr(request.user, "role", None) == "OWNER")
-
-
-class TenantMixin:
-    def get_tenant(self, request):  # type: ignore[no-untyped-def]
-        slug = request.headers.get("X-Tenant-Slug") or request.query_params.get("tenant")
-        if not slug:
-            from core.tenants.models import Tenant
-            # fallback to first tenant in dev
-            return Tenant.objects.first()
-        from core.tenants.models import Tenant
-
-        try:
-            return Tenant.objects.get(slug=slug)
-        except Tenant.DoesNotExist as e:
-            from core.errors.taxonomy import not_found
-
-            raise not_found("TENANT_NOT_FOUND", "tenant not found", {"slug": slug}) from e
+def _assert_sort_free(tenant, sort, is_active, exclude_id=None):  # type: ignore[no-untyped-def]
+    if not is_active:
+        return
+    qs = Banner.objects.filter(tenant=tenant, sort=sort, is_active=True)
+    if exclude_id is not None:
+        qs = qs.exclude(id=exclude_id)
+    if qs.exists():
+        raise err.validation(
+            "BANNER_SORT_TAKEN",
+            "an active banner already uses this position",
+            {"sort": sort},
+        )
 
 
 class BannerViewSet(TenantMixin, viewsets.ModelViewSet):
@@ -48,6 +46,9 @@ class BannerViewSet(TenantMixin, viewsets.ModelViewSet):
 
     def perform_create(self, serializer):  # type: ignore[no-untyped-def]
         tenant = self.get_tenant(self.request)
+        sort = serializer.validated_data.get("sort", 1)
+        is_active = serializer.validated_data.get("is_active", True)
+        _assert_sort_free(tenant, sort, is_active)
         banner = serializer.save(tenant=tenant, created_by=self.request.user if self.request.user.is_authenticated else None)
         BannerEvent.objects.create(tenant=tenant, banner=banner, from_active=False, to_active=banner.is_active, actor=self.request.user if self.request.user.is_authenticated else None)
         self._publish(tenant, banner)
@@ -55,6 +56,10 @@ class BannerViewSet(TenantMixin, viewsets.ModelViewSet):
     def perform_update(self, serializer):  # type: ignore[no-untyped-def]
         tenant = self.get_tenant(self.request)
         before = serializer.instance.is_active
+        instance = serializer.instance
+        sort = serializer.validated_data.get("sort", instance.sort)
+        is_active = serializer.validated_data.get("is_active", instance.is_active)
+        _assert_sort_free(tenant, sort, is_active, exclude_id=instance.id)
         banner = serializer.save()
         BannerEvent.objects.create(tenant=tenant, banner=banner, from_active=before, to_active=banner.is_active, actor=self.request.user)
         self._publish(tenant, banner)
@@ -64,11 +69,11 @@ class BannerViewSet(TenantMixin, viewsets.ModelViewSet):
             layer = get_channel_layer()
             if layer:
                 async_to_sync(layer.group_send)(
-                    f"tenant_{tenant.id}:banners",
+                    f"tenant_{tenant.id}.banners",
                     {"type": "realtime.event", "payload": BannerSerializer(banner).data},
                 )
         except Exception:
-            pass
+            logger.warning("banner publish failed", exc_info=True)
 
 
 def models_Q_ends():  # type: ignore[no-untyped-def]

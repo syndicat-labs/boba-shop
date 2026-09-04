@@ -1,4 +1,5 @@
-from .base import *  # noqa: F401,F403
+from . import base as _base
+from .base import *
 
 DEBUG = True
 ALLOWED_HOSTS = ["*"]
@@ -12,5 +13,6 @@ if PSP_ACTIVE == "mock" and DEV_MOCK_PSP != "1":  # type: ignore[name-defined]
     warnings.warn("DEV_MOCK_PSP should be 1 when PSP_ACTIVE=mock (dev)")
 
 # In-memory channel layer fallback if Redis not ready (dev quick)
-if not CHANNEL_LAYERS["default"]["CONFIG"]["hosts"][0][0]:  # type: ignore[index]
+_redis_hosts = _base.CHANNEL_LAYERS["default"]["CONFIG"]["hosts"]  # type: ignore[index]
+if not _redis_hosts[0][0]:
     CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}  # type: ignore[assignment]

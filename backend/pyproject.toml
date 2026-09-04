@@ -1,3 +1,10 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["config*", "core*", "api*", "adapters*"]
+
 [project]
 name = "boba-shop-backend"
 version = "0.1.0"
@@ -18,6 +25,8 @@ dependencies = [
     "django-cors-headers>=4.4",
     "django-filter>=24",
     "python-dotenv>=1",
+    "python-json-logger>=2",
+    "gunicorn>=22",
 ]
 
 [project.optional-dependencies]
@@ -25,21 +34,55 @@ dev = [
     "pytest>=8",
     "pytest-django>=4.9",
     "pytest-asyncio>=0.24",
+    "pytest-cov>=5",
     "factory-boy>=3.3",
     "ruff>=0.6",
     "mypy>=1.11",
     "types-redis",
+    "django-stubs[compatible-mypy]>=5.1",
+    "djangorestframework-stubs[compatible-mypy]>=3.15",
 ]
 
 [tool.ruff]
 line-length = 100
 target-version = "py312"
 
+[tool.ruff.lint]
+ignore = [
+    "RUF012",  # Django Meta (ordering/indexes/constraints) and DRF (fields/permission_classes)
+    # conventionally use mutable class attributes; converting to tuples is non-idiomatic.
+]
+
+[tool.ruff.lint.per-file-ignores]
+"*/migrations/*.py" = ["RUF012"]
+
 [tool.mypy]
 python_version = "3.12"
+plugins = ["mypy_django_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "config.settings.dev"
+
+# Hexagonal core is strictly typed; framework-adjacent layers (api/adapters/config)
+# are duck-typed against DRF/Django/channels and use a relaxed profile.
+[[tool.mypy.overrides]]
+module = ["core.*"]
 strict = true
 warn_return_any = true
 disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = ["core.*.migrations.*"]
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = ["api.*", "adapters.*", "config.*", "manage", "tests.*"]
+disallow_untyped_defs = false
+check_untyped_defs = false
+disallow_any_generics = false
+ignore_missing_imports = true
+warn_unused_ignores = false
+warn_return_any = false
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings.dev"

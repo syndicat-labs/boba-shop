@@ -1,0 +1,10 @@
+# Cloudflared override — exposes the stack on a public *.trycloudflare.com URL.
+# For live testing from a phone / sharing. NOT for production TLS (see deploy/prod.sh).
+# Usage: docker compose -f docker-compose.dev.yml -f docker-compose.tunnel.yml up -d
+services:
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate --url http://nginx:80
+    depends_on:
+      - nginx
+    restart: unless-stopped

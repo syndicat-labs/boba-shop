@@ -2,10 +2,10 @@
 Dev-only mock live feed for banners. Guarded by DEV_MOCK_FEED=1.
 Publishes random banner every interval to tenant_{tid}:banners.
 """
-import os
 import asyncio
+import os
 import random
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 SEED = [
     {"kicker": "House · Batch at :00", "title": "Brown Sugar — brewed Taichung way", "cta_label": "View →", "cta_type": "sku", "cta_value": "brown-sugar"},
@@ -16,7 +16,7 @@ SEED = [
 ]
 
 
-async def banner_tick(tenant_id, interval: float = 8.0) -> None:
+async def banner_tick(tenant_id: str, interval: float = 8.0) -> None:
     if os.getenv("DEV_MOCK_FEED") != "1":
         raise RuntimeError("Mock feed only with DEV_MOCK_FEED=1")
     from channels.layers import get_channel_layer
@@ -24,9 +24,12 @@ async def banner_tick(tenant_id, interval: float = 8.0) -> None:
     layer = get_channel_layer()
     if layer is None:
         return
-    group = f"tenant_{tenant_id}:banners"
+    group = f"tenant_{tenant_id}.banners"
     while True:
         await asyncio.sleep(interval)
-        payload = random.choice(SEED)
-        payload = {**payload, "at": datetime.now(timezone.utc).isoformat(), "mock": True}
+        payload: dict[str, object] = {
+            **random.choice(SEED),
+            "at": datetime.now(UTC).isoformat(),
+            "mock": True,
+        }
         await layer.group_send(group, {"type": "realtime.event", "payload": payload})

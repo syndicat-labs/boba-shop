@@ -1,10 +1,10 @@
 // Mock live feed for banner — dev only, plugin-able. Admin can localStorage.setItem('boba:banner:events', JSON.stringify([...]))
 const SEED = [
-  {kicker:"House · Batch at :00", title:"Brown Sugar — brewed Taichung way", cta_label:"View →", cta_type:"sku", cta_value:"brown-sugar"},
-  {kicker:"Live · 89 ordered today", title:"Taro — no powder, real taro", cta_label:"Try →", cta_type:"sku", cta_value:"taro"},
-  {kicker:"Sponsor — Straus", title:"Organic milk — sponsor", cta_label:"Learn →", cta_type:"url", cta_value:"https://example.com"},
-  {kicker:"Announce", title:"Batch at :40 — warm pearls", cta_label:"View →", cta_type:"anchor", cta_value:"brown-sugar"},
-  {kicker:"Promo", title:"Matcha Uji — 0% sugar", cta_label:"Try →", cta_type:"sku", cta_value:"matcha"},
+  {kicker:"House · Batch at :00", title:"Brown Sugar — brewed Taichung way", cta_label:"View →", cta_type:"sku", cta_value:"brown-sugar", announcements:"Announcements • Sponsor: Straus Organic Milk • Promo: Matcha Uji 0% sugar — live at 16:9", video_url:"../../assets/boba/sample-live.mp4"},
+  {kicker:"Live · 89 ordered today", title:"Taro — no powder, real taro", cta_label:"Try →", cta_type:"sku", cta_value:"taro", announcements:"Announcements • Sponsor: Straus • Batch at :40 — warm pearls", video_url:"../../assets/boba/sample-live.mp4"},
+  {kicker:"Sponsor — Straus", title:"Organic milk — sponsor", cta_label:"Learn →", cta_type:"url", cta_value:"https://example.com", announcements:"Sponsor: Straus Organic Milk — fresh daily • Promo: Taro 89 ordered", video_url:"../../assets/boba/sample-live.mp4"},
+  {kicker:"Announce", title:"Batch at :40 — warm pearls", cta_label:"View →", cta_type:"anchor", cta_value:"brown-sugar", announcements:"Announcements • New: Hong Kong Boba • Sponsor: Local Farms", video_url:"../../assets/boba/sample-live.mp4"},
+  {kicker:"Promo", title:"Matcha Uji — 0% sugar", cta_label:"Try →", cta_type:"sku", cta_value:"matcha", announcements:"Promo: Matcha Uji 0% sugar • Announcements • Live video 16:9", video_url:"../../assets/boba/sample-live.mp4"},
 ];
 let idx=0;
 const bc = (()=>{ try{ return new BroadcastChannel('boba:banners'); } catch{ return null; }})();

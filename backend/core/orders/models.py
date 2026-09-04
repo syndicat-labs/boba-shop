@@ -1,4 +1,5 @@
 import uuid
+
 from django.db import models
 
 
@@ -12,7 +13,7 @@ class Order(models.Model):
         COMPLETED = "COMPLETED", "Completed"
         CANCELLED = "CANCELLED", "Cancelled"
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid7, editable=False)  # type: ignore[attr-defined]
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     tenant = models.ForeignKey("tenants.Tenant", on_delete=models.CASCADE, related_name="orders")
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.SENT, db_index=True)
     items = models.JSONField(default=list)  # [{sku,name,qty,unit_price,lineTotal}]
@@ -43,7 +44,7 @@ class Order(models.Model):
 
 
 class OrderEvent(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid7, editable=False)  # type: ignore[attr-defined]
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     tenant = models.ForeignKey("tenants.Tenant", on_delete=models.CASCADE, related_name="order_events")
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="events")
     from_status = models.CharField(max_length=20)

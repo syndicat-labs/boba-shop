@@ -1,2 +1,32 @@
 *.pyc
 __pycache__/
+
+# secrets & env
+.env
+.env.*
+!.env.example
+!.env.prod.example
+
+# python
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+media/
+
+# node / frontend
+node_modules/
+dist/
+.angular/
+
+# editor
+.vscode/
+.idea/
+.DS_Store
+
+# infra
+*.log

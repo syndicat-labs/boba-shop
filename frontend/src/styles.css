@@ -1,0 +1,64 @@
+/* boba-shop admin portal — obsidian design language.
+ * Components read only --boba-* semantic tokens; values are resolved by the
+ * active theme (data-theme="boba-obsidian"). */
+@import "../../tokens/semantic.css";
+@import "../../tokens/themes/boba-obsidian.css";
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--boba-color-bg-subtle);
+  color: var(--boba-color-text);
+  font-family: var(--boba-font-body);
+  font-size: 16px;
+  line-height: var(--boba-leading-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input,
+select,
+textarea {
+  max-width: 100%;
+  min-width: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--boba-color-border-strong);
+  outline-offset: 2px;
+}
+
+/* mobile-first 390px canvas, centered with hairline border on desktop.
+ * width:100% (not 100vw) so the desktop scrollbar never pushes content wide. */
+.shell {
+  width: 100%;
+  max-width: var(--boba-content-max);
+  margin: 0 auto;
+  min-height: 100dvh;
+  background: var(--boba-color-bg);
+  border-left: 1px solid var(--boba-color-border);
+  border-right: 1px solid var(--boba-color-border);
+  overflow-x: hidden;
+}
+
+.mono {
+  font-family: var(--boba-font-mono);
+}

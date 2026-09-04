@@ -3,9 +3,10 @@ Dev-only Mock PSP. Import guarded: only available when DEV_MOCK_PSP=1 and settin
 Prod image must not import this module (CI guard).
 """
 import os
-import uuid
 import time
-from core.payments.port import PaymentIntent, WebhookEvent, PspPort
+import uuid
+
+from core.payments.port import PaymentIntent, PspPort, WebhookEvent
 
 
 class MockPsp(PspPort):
@@ -15,7 +16,7 @@ class MockPsp(PspPort):
         # Simulate 400ms latency, no external call
         time.sleep(0.4)
         return PaymentIntent(
-            payment_id=uuid.uuid7(),  # type: ignore[attr-defined]
+            payment_id=uuid.uuid4(),
             order_id=order_id,
             amount=amount,
             currency=currency,
@@ -38,7 +39,7 @@ class MockPsp(PspPort):
                 success=bool(data["success"]),
                 raw=raw,
             )
-        except Exception:
+        except (ValueError, KeyError, TypeError):
             return None
 
 
