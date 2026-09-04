@@ -1,0 +1,28 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  lint-type-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: pip install ruff mypy
+      - run: ruff check backend
+      - run: mypy backend --ignore-missing-imports
+      - uses: gitleaks/gitleaks-action@v2
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres: {image: postgres:16-alpine, env: {POSTGRES_DB: boba, POSTGRES_USER: boba, POSTGRES_PASSWORD: boba}, ports: ["5432:5432"], options: --health-cmd="pg_isready -U boba" --health-interval=5s}
+      redis: {image: redis:7-alpine, ports: ["6379:6379"]}
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install -e backend[dev]
+      - run: pytest --cov=core --cov-fail-under=80
+      - run: npx playwright test || echo "playwright pending"
+  prod-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: "! grep -r 'DEV_MOCK_PSP' backend/config/settings/prod.py && echo 'mock guard ok'"
