@@ -52,6 +52,7 @@ The single biggest gap: the customer-facing experience is still the static proto
 
 ## Phase 9 — Production cutover
 
+- [x] Release pipeline: `.github/workflows/release.yml` (test gate + frontend artifact + ghcr image + GitHub release) and **v0.1.0** released.
 - [ ] Real PSP + S3 + passkeys in place; `TRUST_PROXY=1` behind Cloudflare named tunnel; `deploy/prod.sh` end-to-end.
 - [ ] Data migration for existing tenants; backup/restore runbook; rollback plan for every migration (ADR §19).
 

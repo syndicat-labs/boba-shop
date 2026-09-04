@@ -1,10 +1,22 @@
 # Progress Status — boba-shop
 
-> Last updated: 2026-09-04 · Branch: `feature/production-foundation` · Status: active development, dev-deployed at http://localhost/
+> Last updated: 2026-09-04 · Branch: `main` · Status: **v0.1.0 released** (dev stack stopped; restart with `./deploy/local.sh`)
 
 ## Overview
 
-Multi-tenant boba-shop platform. Backend: Django 5 + DRF + Channels (daphne) + Postgres 16 + Redis 7 + MinIO, hexagonal layout. Frontend: Angular 17 (obsidian design language, mobile-first 390px). The **owner/admin portal** is functional and running; the **customer menu** is still the static prototype and is the next major build.
+Multi-tenant boba-shop platform. Backend: Django 5 + DRF + Channels (daphne) + Postgres 16 + Redis 7 + MinIO, hexagonal layout. Frontend: Angular 17 (obsidian design language, mobile-first 390px). The **owner/admin portal** is functional; **v0.1.0** is cut and released. The **customer menu** is still the static prototype and is the next major build.
+
+## Release
+
+- **v0.1.0** published (tag + GitHub release): https://github.com/syndicat-labs/boba-shop/releases/tag/v0.1.0
+- Release workflow `.github/workflows/release.yml` — on `v*` tags: test gate (pytest ≥80%), frontend build artifact (`frontend-dist.tar.gz`), backend Docker image → `ghcr.io/syndicat-labs/boba-shop`, GitHub release with generated notes.
+- Branch tree on remote: `main`, `release/v0.1.0`, `feature/production-foundation` (all in sync), plus tag `v0.1.0`.
+- PRs #1–#5 merged with merge commits (no squash): release→main, feature→main, main→release, and CI-fix propagation.
+
+## CI
+
+- `.github/workflows/ci.yml` — `lint-type-audit` (ruff + mypy + gitleaks), `test` (pytest + Postgres/Redis), `frontend` (ng build), `prod-guard` (mock isolation).
+- gitleaks-action v2 now requires `GITHUB_TOKEN` (passes for PR scans) and `fetch-depth: 0` — both wired in.
 
 ## What is done
 
@@ -39,9 +51,11 @@ Multi-tenant boba-shop platform. Backend: Django 5 + DRF + Channels (daphne) + P
 | Gate | Result |
 |---|---|
 | `ruff check backend` | ✅ clean |
-| `mypy backend --ignore-missing-imports` | ✅ clean (89 files) |
+| `mypy backend --ignore-missing-imports` | ✅ clean |
 | `pytest --cov=core --cov-fail-under=80` | ✅ **52 passed, 85.6% coverage** |
 | `ng build` | ✅ clean |
+| GitHub Actions `ci` (all 4 jobs) | ✅ green on `main`/`release`/`feature` + PR events |
+| GitHub Actions `release` (v0.1.0) | ✅ green (test + frontend + image + release) |
 | Live smoke (curl) | ✅ login, staff, analytics, orders, upload→webp, menu QR, receipt PNG, banner sort collision |
 
 ## Known gaps (→ see `docs/IMPLEMENTATION_PLAN.md`)
