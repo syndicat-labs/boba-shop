@@ -4,30 +4,35 @@
 
 ## Phase 1 — Customer menu (Angular) + order creation
 
-The single biggest gap: the customer-facing experience is still the static prototype. Port it to Angular and wire it to the backend.
+> ✅ **Complete** — 2026-09-05 (see `docs/PROGRESS.md` "Phase 1 delivered"). The static prototype customer experience is now a live Angular app wired to the backend, verified end-to-end against the running server.
 
-- [ ] `frontend` customer routes (`/menu`): menu list (reads `GET /products?active=1`), cart builder, live banner (subscribes to WS `tenant_{slug}.banners` + the banner video player).
-- [ ] Backend `POST /tenants/{tid}/orders` — create an order in `SENT` from cart items; validate `MIN_ORDER_GHS` (₵8) + `pricing.domain` line totals; emit `OrderEvent` + publish to `tenant_{tid}.orders`.
-- [ ] Checkout modal → `PspPort.create_payment` (MockPsp in dev) → payment webhook → `RECEIVED`.
-- [ ] Tracking page (5-step stepper) subscribing to `ws/tenants/{tid}/orders/{id}`; pickup-code entry for the customer.
-- [ ] Split the SPA shell so `/` serves the customer app and `/admin` the owner portal (route guard already exists).
+- [x] `frontend` customer routes (`/menu`): menu list (reads `GET /products?active=1`), cart builder, image banner carousel (CTA-free since 2026-09-05).
+- [x] Backend `POST /tenants/{tid}/orders` — create an order in `SENT` from cart items; validate `MIN_ORDER_GHS` (₵8) + `pricing.domain` line totals; emit `OrderEvent` + publish to `tenant_{tid}.orders`.
+- [x] Checkout modal → `PspPort.create_payment` (MockPsp in dev) → payment webhook → `RECEIVED`.
+- [x] Tracking page (5-step stepper) subscribing to `ws/tenants/{tid}/orders/{id}`; pickup-code entry for the customer.
+- [x] Split the SPA shell so `/` serves the customer app and `/admin` the owner portal (route guard already exists).
 
-## Phase 2 — Real payments
+## Phase 2 — Auth upgrade (OAuth2.1 + Passkeys)
 
-- [ ] Implement a real `PspPort` adapter (Paystack or Flutterwave for GHS) behind `PSP_ACTIVE`.
+> Ordered ahead of payments: real money cannot run on the current CSRF-exempt session bridge (`PROD-FLAG[NO-API-VERSION]` on login). Auth is the gate for Phases 3–4.
+
+- [ ] WebAuthn passkeys for OWNER/STAFF login (replaces session bridge); JWT refresh in `HttpOnly; Secure; SameSite=Strict` cookies.
+- [ ] Remove `@method_decorator(csrf_exempt)` on auth (retired `PROD-FLAG`).
+- [ ] CSRF via the existing `CsrfInterceptor` transition; then OAuth2.1 (PKCE) for the SPA.
+- [ ] Security-adversarial tests: passkey replay, cookie theft/CSRF, cross-tenant session.
+
+## Phase 3 — Real payments (provider deferred)
+
+> PSP choice (Paystack vs Flutterwave for GHS) deferred to live decision; plan is adapter-shaped so either drops in behind `PSP_ACTIVE`.
+
+- [ ] Implement a real `PspPort` adapter (Paystack or Flutterwave for GHS) behind `PSP_ACTIVE`; both vendors evaluated for banking/mobile-money coverage before deciding.
 - [ ] HMAC webhook verification + idempotent `Payment` state (`PENDING→SUCCESS/FAILED`), webhook replay protection.
-- [ ] Remove `PROD-FLAG` on login CSRF by switching auth (see Phase 4) before accepting real money.
+- [ ] Payment-determined order completion; failure → explicit `PAYMENT_FAILED` state with safe retry; no money moves until Phases 2+3 audits pass.
 
-## Phase 3 — Receipt storage (S3/MinIO)
+## Phase 4 — Receipt storage (S3/MinIO)
 
 - [ ] `adapters/storage` S3 client (boto3) + presigned URLs; upload receipt PNGs to MinIO (dev) / S3 (prod); 24h signed `GET /receipt → 302`.
 - [ ] Reuse for product image uploads (move `/media` off the local Docker volume to MinIO).
-
-## Phase 4 — Auth upgrade (OAuth2.1 + Passkeys)
-
-- [ ] WebAuthn passkeys for OWNER/STAFF login (replaces session bridge); JWT refresh in `HttpOnly; Secure; SameSite=Strict` cookies.
-- [ ] Remove `@method_decorator(csrf_exempt)` on auth (currently `PROD-FLAG[NO-API-VERSION]`).
-- [ ] CSRF via the existing `CsrfInterceptor` retained for the transition.
 
 ## Phase 5 — Live queue + realtime hardening
 
@@ -58,4 +63,4 @@ The single biggest gap: the customer-facing experience is still the static proto
 
 ## Ordering note
 
-Phases 1–4 are the critical path to a real money-capable, customer-usable product. Phases 5–9 are hardening/scale. Each phase is independently deployable behind the existing versioned `v1` API (no breaking changes without a deprecation window).
+Phases 1–4 are the critical path to a real money-capable, customer-usable product (auth first, then payments, then durable receipt storage). Phases 5–9 are hardening/scale. Each phase is independently deployable behind the existing versioned `v1` API (no breaking changes without a deprecation window).
