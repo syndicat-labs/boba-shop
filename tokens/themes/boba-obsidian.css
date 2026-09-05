@@ -9,6 +9,7 @@
   --boba-obs-muted: #6b6b6b;
   --boba-obs-faint: #9a9a9a;
   --boba-obs-accent: #0a0a0a;
+  --boba-obs-live: #ff1a1a;
 
   --boba-color-bg: var(--boba-obs-paper);
   --boba-color-bg-subtle: var(--boba-obs-paper-subtle);
@@ -25,6 +26,9 @@
   --boba-color-chip-bg: #ffffff;
   --boba-color-chip-active-bg: #0a0a0a;
   --boba-color-chip-active-text: #ffffff;
+  --boba-color-danger: var(--boba-obs-live);
+  --boba-color-border-inverse: rgba(255,255,255,0.22);
+  --boba-color-border-inverse-subtle: rgba(255,255,255,0.14);
 
   --boba-font-display: 'Inter', system-ui, sans-serif;
   --boba-font-body: 'Inter', system-ui, sans-serif;
@@ -39,6 +43,10 @@
   --boba-shadow-sm: none;
   --boba-shadow-md: none;
   --boba-shadow-lg: none;
+  --boba-shadow-overlay: 0 16px 48px rgba(10,10,10,0.22);
+
+  --boba-media-fade-opacity: 0.58;
+  --boba-media-fade: linear-gradient(90deg, rgba(255,255,255,0) 52%, rgba(255,255,255,0.82) 78%, var(--boba-color-card-bg) 96%);
 
   --boba-duration-fast: 150ms;
   --boba-duration-base: 180ms;

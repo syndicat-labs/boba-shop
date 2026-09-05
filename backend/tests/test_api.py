@@ -117,6 +117,15 @@ def test_upload_rejects_bad_type(api, owner):
 
 
 @pytest.mark.django_db
+def test_upload_rejects_over_10mb(api, owner):
+    from api.v1.views_uploads import MAX_SIZE
+
+    resp = _upload(api, owner, b"\x00" * (MAX_SIZE + 1), name="big.png", content_type="image/png")
+    assert resp.status_code == 400
+    assert resp.data["code"] == "UPLOAD_TOO_LARGE"
+
+
+@pytest.mark.django_db
 def test_upload_accepts_image(api, owner, tmp_path, monkeypatch):
     from django.core.files.storage import default_storage
 
@@ -128,40 +137,85 @@ def test_upload_accepts_image(api, owner, tmp_path, monkeypatch):
 
 
 @pytest.mark.django_db
-def test_banner_sort_collision_returns_400(api, owner, tenant):
+def test_banner_single_container_enforced(api, owner, tenant):
     from django.utils import timezone
 
     from core.banners.models import Banner
 
-    Banner.objects.create(
-        tenant=tenant, kicker="A", title="A", cta_label="View", sort=1, is_active=True, starts_at=timezone.now()
-    )
+    Banner.objects.create(tenant=tenant, is_active=True, starts_at=timezone.now())
     api.force_authenticate(user=owner)
     resp = api.post(
         f"/api/v1/tenants/{SLUG}/banners/",
-        {"kicker": "B", "title": "B", "cta_label": "View", "sort": 1, "is_active": True, "starts_at": "2026-01-01T00:00:00Z"},
+        {"is_active": True, "starts_at": "2026-01-01T00:00:00Z"},
         format="json",
         **_headers(),
     )
     assert resp.status_code == 400
-    assert resp.data["code"] == "BANNER_SORT_TAKEN"
+    assert resp.data["code"] == "BANNER_EXISTS"
 
 
 @pytest.mark.django_db
-def test_banner_create_free_sort_ok(api, owner, tenant):
+def test_banner_patch_replaces_slides(api, owner, tenant):
     from django.utils import timezone
 
     from core.banners.models import Banner
 
-    Banner.objects.create(
-        tenant=tenant, kicker="A", title="A", cta_label="View", sort=1, is_active=True, starts_at=timezone.now()
-    )
+    b = Banner.objects.create(tenant=tenant, is_active=True, starts_at=timezone.now())
     api.force_authenticate(user=owner)
     resp = api.post(
         f"/api/v1/tenants/{SLUG}/banners/",
-        {"kicker": "B", "title": "B", "cta_label": "View", "cta_type": "url", "cta_value": "https://youtube.com", "media_url": "https://www.youtube.com/embed/abc", "sort": 2, "is_active": True, "starts_at": "2026-01-01T00:00:00Z"},
+        {"is_active": True, "starts_at": "2026-01-01T00:00:00Z", "slides": [{"kicker": "A", "title": "Alpha", "announcement": "note", "position": 1, "is_active": True}]},
         format="json",
         **_headers(),
     )
-    assert resp.status_code == 201
+    assert resp.status_code == 400  # second container rejected even with slides
+
+    resp = api.patch(
+        f"/api/v1/tenants/{SLUG}/banners/{b.id}/",
+        {"slides": [
+            {"kicker": "A", "title": "Alpha", "announcement": "note", "position": 1, "is_active": True},
+            {"image_url": "/media/x.webp", "kicker": "B", "title": "Beta", "position": 2, "is_active": True},
+        ]},
+        format="json",
+        **_headers(),
+    )
+    assert resp.status_code == 200
+    slides = resp.data["slides"]
+    assert [s["title"] for s in slides] == ["Alpha", "Beta"]
+    assert slides[1]["image_url"] == "/media/x.webp"
+    assert "cta_type" not in slides[1]
+    assert slides[0]["announcement"] == "note"
+
+    # PATCH again replaces the set (no duplicates, old slides gone).
+    resp = api.patch(
+        f"/api/v1/tenants/{SLUG}/banners/{b.id}/",
+        {"slides": [{"kicker": "C", "title": "Gamma", "position": 1, "is_active": True}]},
+        format="json",
+        **_headers(),
+    )
+    assert [s["title"] for s in resp.data["slides"]] == ["Gamma"]
+
+
+@pytest.mark.django_db
+def test_banner_public_list_excludes_inactive_and_slides_ordered(api, owner, tenant):
+    from django.utils import timezone
+
+    from core.banners.models import Banner, BannerSlide
+
+    b = Banner.objects.create(tenant=tenant, is_active=True, starts_at=timezone.now())
+    BannerSlide.objects.create(banner=b, kicker="A", title="Alpha", position=2, is_active=True)
+    BannerSlide.objects.create(banner=b, kicker="B", title="Beta", position=1, is_active=True)
+    BannerSlide.objects.create(banner=b, kicker="C", title="Ghost", position=3, is_active=False)
+
+    resp = api.get(f"/api/v1/tenants/{SLUG}/banners/?active=1", **_headers())
+    assert resp.status_code == 200
+    assert len(resp.data) == 1
+    assert resp.data[0]["id"] == str(b.id)
+    # slides ordered by position; inactive slide kept (customer hides client-side)
+    assert [s["title"] for s in resp.data[0]["slides"]] == ["Beta", "Alpha", "Ghost"]
+
+    b.is_active = False
+    b.save()
+    resp = api.get(f"/api/v1/tenants/{SLUG}/banners/?active=1", **_headers())
+    assert resp.data == []
 

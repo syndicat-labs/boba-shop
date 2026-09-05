@@ -4,20 +4,10 @@ from django.db import models
 
 
 class Banner(models.Model):
-    class CtaType(models.TextChoices):
-        SKU = "sku", "SKU"
-        URL = "url", "URL"
-        ANCHOR = "anchor", "Anchor"
+    """One carousel container per tenant; content lives in BannerSlide rows."""
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     tenant = models.ForeignKey("tenants.Tenant", on_delete=models.CASCADE, related_name="banners")
-    kicker = models.CharField(max_length=40)
-    title = models.CharField(max_length=120)
-    cta_label = models.CharField(max_length=20, default="View →")
-    cta_type = models.CharField(max_length=10, choices=CtaType.choices, default=CtaType.ANCHOR)
-    cta_value = models.CharField(max_length=256, default="brown-sugar")
-    media_url = models.URLField(null=True, blank=True)
-    sort = models.PositiveSmallIntegerField(default=1)
     is_active = models.BooleanField(default=True, db_index=True)
     starts_at = models.DateTimeField()
     ends_at = models.DateTimeField(null=True, blank=True)
@@ -27,15 +17,36 @@ class Banner(models.Model):
 
     class Meta:
         db_table = "banners"
-        ordering = ["sort", "-created_at"]
-        indexes = [models.Index(fields=["tenant", "is_active"]), models.Index(fields=["tenant", "sort"])]
+        ordering = ["created_at"]
+        indexes = [models.Index(fields=["tenant", "is_active"])]
         constraints = [
-            models.UniqueConstraint(fields=["tenant", "sort"], condition=models.Q(is_active=True), name="uniq_tenant_sort_active"),
             models.CheckConstraint(condition=models.Q(ends_at__isnull=True) | models.Q(ends_at__gt=models.F("starts_at")), name="chk_ends_after_starts"),
         ]
 
     def __str__(self) -> str:
-        return f"{self.kicker}: {self.title[:30]} ({self.tenant.slug})"
+        return f"carousel ({self.tenant.slug}, active={self.is_active})"
+
+
+class BannerSlide(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    banner = models.ForeignKey(Banner, on_delete=models.CASCADE, related_name="slides")
+    # CharField (not URLField): holds uploaded image URLs relative to MEDIA_ROOT
+    # (e.g. /media/<tenant>/<hex>.webp) which URLField's validator rejects.
+    image_url = models.CharField(max_length=512, null=True, blank=True)
+    kicker = models.CharField(max_length=40)
+    title = models.CharField(max_length=120)
+    announcement = models.TextField(max_length=280, blank=True)
+    position = models.PositiveSmallIntegerField(default=1)
+    is_active = models.BooleanField(default=True, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "banner_slides"
+        ordering = ["position", "created_at"]
+        indexes = [models.Index(fields=["banner", "is_active"])]
+
+    def __str__(self) -> str:
+        return f"{self.kicker}: {self.title[:30]}"
 
 
 class BannerEvent(models.Model):

@@ -3,6 +3,12 @@ from .base import *
 
 DEBUG = True
 ALLOWED_HOSTS = ["*"]
+
+# The dev docker nginx proxies API/WS from cloudflared (dev tunnel) which speaks
+# https; without trusting X-Forwarded-Proto Django sees scheme=http and DRF's
+# session-CSRF origin check rejects the browser's https Origin (403 "Origin
+# checking failed"). Dev-only: local nginx is the only proxy hop.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 CORS_ALLOWED_ORIGINS = ["http://localhost:4200", "http://localhost:8000"]
 
 # Dev DB via docker-compose

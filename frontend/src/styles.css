@@ -1,6 +1,7 @@
 /* boba-shop admin portal — obsidian design language.
  * Components read only --boba-* semantic tokens; values are resolved by the
  * active theme (data-theme="boba-obsidian"). */
+@import "cropperjs/dist/cropper.min.css";
 @import "../../tokens/semantic.css";
 @import "../../tokens/themes/boba-obsidian.css";
 

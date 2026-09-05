@@ -62,7 +62,8 @@ Hexagonal: `core` (pure Python, no Django) → `adapters` (db, psp/mock, realtim
 
 ### 12. Technology stack
 - Backend: `Python 3.12`, `Django 5`, `DRF`, `Channels 4 + daphne`, `PostgreSQL 16`, `Redis 7`, `Celery`, `Pillow` (receipt PNG) + `qrcode`, `gunicorn` prod, `uv` for deps.
-- Frontend: `Angular 21`, `TypeScript strict`, `SCSS` with own `boba-obsidian` contract (`boba-obsidian.css:1` → `styles/tokens/_contract.scss`), `Vitest` + `Playwright`.
+- Frontend: `Angular 21`, `TypeScript strict`, `SCSS` with own `boba-obsidian` contract (`boba-obsidian.css:1` → `styles/tokens/_contract.scss`), `Vitest` + `Playwright`, `cropperjs@1.6.2` (MIT) — admin image crop/edit before upload.
+- **Dependency rationale — `cropperjs`:** required for admin crop-to-spec on product + banner-slide uploads (browser `object-fit: cover` cannot be admin-controlled without it). Choice of **1.6.2**: the classic stable API (`new Cropper(img, opts)` + `getCroppedCanvas`) with a decade of production use and zero open CVEs; **v2.x (2025 Web-Components rewrite) explicitly rejected** as less battle-tested. Client-side canvas crop → existing `UploadViewSet` re-encodes to WebP unchanged. Vetted 2026-09-05: MIT license, active use, no advisories; pinned exact version.
 - Tooling: `uv`, `ruff`, `mypy --strict`, `gitleaks`, `Syft` SBOM, `cloudflared`, `nginx:alpine`, `docker-compose`.
 - Deferrals: PSP provider not chosen, compliance audit deferred per §8.
 
@@ -88,23 +89,34 @@ Hexagonal: `core` (pure Python, no Django) → `adapters` (db, psp/mock, realtim
 - Migrations additive-only, `CREATE INDEX CONCURRENTLY`, rollback docs.
 
 ### 15. API design
-- Versioned `v1` from day 1, cursor pagination, envelope `{code,message,context,retryable,requestId}`.
-- `POST /api/v1/tenants/{tid}/orders` → `201 {order SENT}`
-- `POST /api/v1/tenants/{tid}/payments {orderId, psp:'mock'}` → `PaymentIntent` (dev mock, 1.2s delay)
-- `POST /api/v1/webhooks/psp/{psp}` (mock dev-only, HMAC `mock-sig`, idempotent `pspTxId`)
-- `PATCH /api/v1/tenants/{tid}/orders/{id}/status {to}` `OWNER|STAFF` → guarded transition, emits `OrderEvent` + realtime
-- `POST /api/v1/tenants/{tid}/orders/{id}/pickup:verify {code}` validates `===` & `expiresAt` & rate-limit 3
-- `GET /api/v1/tenants/{tid}/orders/{id}/receipt` → `302` signed S3 URL (24h)
-- `WS /ws/tenants/{tid}/orders/{id}` (Channels) for live tracker + toasts
-- `POST /api/v1/tenants/{tid}/admin/staff` `OWNER` only
+- Versioned `v1` from day 1, cursor pagination, envelope `{category,code,message,context,retryable,requestId}`.
+- **Customer (anonymous, public):**
+  - `GET /api/v1/tenants/{slug}/products/?active=1` → product list (public, no auth)
+  - `GET /api/v1/tenants/{slug}/banners/?active=1` → active banners (public)
+  - `POST /api/v1/tenants/{slug}/orders/ {items:[{sku,qty}]}` → `{order, payment:{id,psp,amount,currency,client_secret,psp_tx_id}}` — server calls PSP internally; creates `SENT`
+  - `GET /api/v1/tenants/{slug}/orders/{oid}/` → order status + pickup code (public, tenant-isolated)
+  - `POST /api/v1/tenants/{slug}/orders/{oid}/confirm_pickup/ {code}` → `{verified, order}` (public; only succeeds from `AWAITING_PICKUP` with matching code)
+  - `GET /api/v1/tenants/{slug}/orders/{oid}/receipt/` → receipt PNG download (public; only when order has `receipt_s3_key`; cross-tenant 404)
+  - `POST /api/v1/webhooks/psp/{psp}` — PSP callback (HMAC `X-PSP-Signature`; dev `mock-sig`; transitions `SENT→RECEIVED`)
+- **Staff/Owner (session-authenticated):**
+  - `POST /api/v1/auth/login/` / `POST /api/v1/auth/logout/` / `GET /api/v1/auth/me/`
+  - `POST /api/v1/tenants/{slug}/orders/` → owner creates order on behalf (session auth)
+  - `PATCH /api/v1/tenants/{slug}/orders/{id}/status/ {to}` → guarded transition (OWNER|STAFF)
+  - `POST /api/v1/tenants/{slug}/admin/staff/` → owner only, staff invite
+  - Catalog CRUD, banner CRUD, uploads, analytics (owner only)
+- **Realtime (WebSocket):**
+  - `ws/{hostname}/ws/tenants/{slug}/banners/` — banner push events (anon, tenant-scoped)
+  - `ws/{hostname}/ws/tenants/{slug}/orders/{oid}/` — per-order status stream (anon, tenant-scoped)
+- Customer-facing tenant identifier is `slug` (not UUID); `TenantInterceptor` auto-injects `X-Tenant-Slug` header.
 
 ### 16. Security model
-- AuthN: admin `OAuth2.1 + Passkeys` (WebAuthn), `HttpOnly; Secure; SameSite=Strict` cookies for JWT refresh, never `localStorage`. Customer anon via `orderId` capability + `pickupCode`.
-- AuthZ: `RBAC` OWNER vs STAFF, `TenantAware` middleware sets `request.tenant` from subdomain `{slug}.localhost` (dev via cloudflared) or `X-Tenant-Slug`; per-object `tenant_id==request.tenant.id` check, tested adversarial.
-- Validation at boundary: DRF serializers + `pydantic` in `core`, toppings enum `+₵0.80`, `Min ₵8` enforced server.
-- Secrets via `env`/`Vault`, `gitleaks` pre-commit + CI, `eval`/`shell` banned.
-- Rate limit: `throttling` on `payments`/`pickup:verify`/`webhooks`.
-- Multi-tenant isolation: RLS + `TenantAware` integration tests with real PG.
+- **AuthN:** Owner/staff: session-based login (`/auth/login/`), CSRF cookie on session POSTs; `HttpOnly; Secure; SameSite=Strict` cookies; never `localStorage` for secrets. Customer: fully anonymous — no login, no token; **order ID + 4-digit pickup code serve as the capability tokens** for track/confirm_pickup/receipt.
+- **AuthZ:** `IsOwner` / `IsOwnerOrStaff` / `IsPublic` (customer endpoints); RBAC OWNER vs STAFF. Per-object `tenant_id==request.tenant.id` check enforced by `TenantAwareMiddleware` + cross-tenant queries return 404.
+- **Tenant isolation:** `X-Tenant-Slug` header required on every request (auto-injected by `TenantInterceptor`); every data-access query scoped to `tenant_id`. Cross-tenant receipt download / track / confirm_pickup return 404, never leaking row existence.
+- **Validation at boundary:** DRF serializers + domain-level rules; `MIN_ORDER_GHS=₵8` enforced server-side; `MAX_ITEM_QTY=99` per line item.
+- **Secrets via `env`/`Vault`**, `gitleaks` pre-commit + CI, `eval`/`shell` banned.
+- **Rate limit:** `throttling` on `payments`/`pickup_verify`/`webhooks`.
+- **WebSocket:** anonymous connections accepted; groups scoped as `tenant_{uuid}.banners`, `tenant_{uuid}.orders`, `tenant_{uuid}.orders.{oid}` — foreign-tenant slug yields an empty group (no cross-tenant leak).
 
 ### 17. Error taxonomy
 `VALIDATION|AUTHENTICATION|AUTHORIZATION|NOT_FOUND|EXTERNAL_DEPENDENCY|INTERNAL|RATE_LIMITED` with `{code,message,context,retryable,layer}`. Every external call (PSP/mock, PG, Redis, S3) has explicit handling, no bare `except`. Resolved at boundary (API maps domain errors to HTTP).

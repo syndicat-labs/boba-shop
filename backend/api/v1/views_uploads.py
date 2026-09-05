@@ -15,7 +15,7 @@ from core.errors import taxonomy as err
 
 from .permissions import IsOwner, TenantMixin
 
-MAX_SIZE = 5 * 1024 * 1024  # 5 MB
+MAX_SIZE = 10 * 1024 * 1024  # 10 MB
 WEBP_QUALITY = 85
 
 
@@ -39,7 +39,7 @@ class UploadViewSet(TenantMixin, viewsets.ViewSet):
         if file is None:
             raise err.validation("UPLOAD_NO_FILE", "file required", {})
         if file.size > MAX_SIZE:
-            raise err.validation("UPLOAD_TOO_LARGE", "image too large (max 5MB)", {"size": file.size})
+            raise err.validation("UPLOAD_TOO_LARGE", "image too large (max 10MB)", {"size": file.size})
 
         try:
             webp = _to_webp(file)

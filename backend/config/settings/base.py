@@ -93,7 +93,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ["rest_framework.authentication.SessionAuthentication"],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
     "EXCEPTION_HANDLER": "api.exceptions.boba_exception_handler",
-    "DEFAULT_THROTTLE_RATES": {"pickup_verify": "5/min"},
+    "DEFAULT_THROTTLE_RATES": {"pickup_verify": "5/min", "order_create": "60/min"},
 }
 
 CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:4200").split(",")

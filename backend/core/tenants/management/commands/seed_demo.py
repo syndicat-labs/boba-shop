@@ -4,7 +4,7 @@ from decimal import Decimal
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from core.banners.models import Banner
+from core.banners.models import Banner, BannerSlide
 from core.catalog.models import Product
 from core.tenants.models import Tenant
 from core.users.models import User
@@ -44,17 +44,18 @@ class Command(BaseCommand):
                 defaults={"name": name, "description": desc, "price": Decimal(price), "image_key": img, "card_image_key": thumb, "sort": i, "is_active": True},
             )
 
-        if not Banner.objects.filter(tenant=tenant).exists():
-            Banner.objects.create(
-                tenant=tenant,
+        banner, created = Banner.objects.get_or_create(
+            tenant=tenant,
+            defaults={"is_active": True, "starts_at": timezone.now()},
+        )
+        if created:
+            BannerSlide.objects.create(
+                banner=banner,
                 kicker="House · Batch at :00",
                 title="Brown Sugar — brewed Taichung way",
-                cta_label="View →",
-                cta_type="sku",
-                cta_value="brown-sugar",
-                sort=1,
+                announcement="Freshly brewed every hour in the Taichung style.",
+                position=1,
                 is_active=True,
-                starts_at=timezone.now(),
             )
 
         self._seed_orders(tenant)

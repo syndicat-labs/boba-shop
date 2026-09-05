@@ -23,11 +23,6 @@ class _GroupConsumer(AsyncWebsocketConsumer):  # type: ignore[misc]  # channels 
         raise NotImplementedError
 
 
-class BannerConsumer(_GroupConsumer):
-    def _group_name(self, tid) -> str:  # type: ignore[no-untyped-def]
-        return f"tenant_{tid}.banners"
-
-
 class OrderConsumer(_GroupConsumer):
     def _group_name(self, tid) -> str:  # type: ignore[no-untyped-def]
         oid = self.scope["url_route"]["kwargs"].get("oid")
@@ -42,7 +37,6 @@ class OrderQueueConsumer(_GroupConsumer):
 
 
 websocket_urlpatterns = [
-    path("ws/tenants/<uuid:tid>/banners", BannerConsumer.as_asgi()),
     path("ws/tenants/<uuid:tid>/orders", OrderQueueConsumer.as_asgi()),
     path("ws/tenants/<uuid:tid>/orders/<uuid:oid>", OrderConsumer.as_asgi()),
 ]

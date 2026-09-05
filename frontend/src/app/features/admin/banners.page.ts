@@ -1,186 +1,80 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AdminService, Banner } from '../../core/api/admin.service';
+import { firstValueFrom } from 'rxjs';
+import { AdminService, Banner, BannerSlide } from '../../core/api/admin.service';
+import { UploadCardComponent } from '../../core/ui/upload-card.component';
+import { assetUrl } from '../../core/customer/customer.service';
+
+const FALLBACK_IMAGE = '/assets/boba/brownsugar.jpeg';
+
+interface SlideDraft {
+  image_url: string | null;
+  kicker: string;
+  title: string;
+  announcement: string;
+  position: number;
+  is_active: boolean;
+  file: File | null;
+  preview: string | null;
+}
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, UploadCardComponent],
   template: `
     <div>
-      <h2 style="font-size:var(--boba-text-lg);font-weight:var(--boba-weight-bold);margin:0 0 var(--boba-space-2)">Banners · Live events</h2>
-      <p style="font-size:var(--boba-text-sm);color:var(--boba-color-text-muted);margin:0 0 var(--boba-space-4)">Promoted banner on the customer menu. Owner only.</p>
+      <h2 style="font-size:var(--boba-text-lg);font-weight:var(--boba-weight-bold);margin:0 0 var(--boba-space-2)">Banners · Carousel</h2>
+      <p style="font-size:var(--boba-text-sm);color:var(--boba-color-text-muted);margin:0 0 var(--boba-space-4)">
+        One carousel on the customer menu — add as many slides as you like; each can carry its own image, text and announcement. It auto-advances.
+      </p>
 
-      <div class="preview" style="margin-bottom:var(--boba-space-4)">
-        <div class="preview-video">
-          <iframe *ngIf="isYoutube(draft.media_url) && youtubeEmbed(draft.media_url)" [src]="youtubeEmbed(draft.media_url)" title="Live video preview" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
-          <video *ngIf="draft.media_url && !isYoutube(draft.media_url)" [src]="draft.media_url" autoplay muted loop playsinline controls></video>
-          <div *ngIf="!draft.media_url" class="preview-empty">No media</div>
-          <div class="preview-live">LIVE</div>
+      <div style="display:flex;align-items:center;gap:var(--boba-space-3);margin-bottom:var(--boba-space-4)">
+        <label style="display:flex;align-items:center;gap:var(--boba-space-2);font-size:var(--boba-text-sm);color:var(--boba-color-text-muted)">
+          <input type="checkbox" [(ngModel)]="live" name="live" style="width:16px;height:16px" />
+          Carousel live
+        </label>
+        <span style="font-size:var(--boba-text-xs);color:var(--boba-color-text-muted)">{{ drafts.length }} slide(s)</span>
+      </div>
+
+      <div *ngFor="let d of drafts; let i = index" style="background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse);border-radius:var(--boba-radius-md);padding:var(--boba-space-4);margin-bottom:var(--boba-space-4)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--boba-space-3)">
+          <div style="font-size:var(--boba-text-xs);letter-spacing:0.14em;text-transform:uppercase;opacity:0.6">Slide {{ i + 1 }}</div>
+          <button type="button" (click)="remove(i)" style="border:1px solid rgba(255,255,255,0.22);border-radius:var(--boba-radius-sm);padding:6px 10px;font-size:var(--boba-text-xs);text-transform:uppercase;letter-spacing:0.08em;background:transparent;color:var(--boba-color-text-inverse)">Remove</button>
         </div>
-        <div class="preview-content">
-          <div class="preview-kicker">{{ draft.kicker || 'Kicker' }}</div>
-          <div class="preview-title">{{ draft.title || 'Title' }}</div>
-          <button class="preview-cta">{{ draft.cta_label || 'View →' }}</button>
+
+        <boba-upload-card label="Slide image (16:9)" [ratio]="16 / 9" [maxDimension]="1280" [preview]="d.preview || assetUrl(d.image_url) || null" (fileSelected)="onMediaFile($event, i)"></boba-upload-card>
+
+        <div style="display:flex;flex-direction:column;gap:var(--boba-space-2);margin-top:var(--boba-space-3)">
+          <input [(ngModel)]="d.kicker" name="kicker-{{ i }}" placeholder="Kicker (40)" maxlength="40" style="padding:var(--boba-space-3);border:1px solid rgba(255,255,255,0.22);border-radius:var(--boba-radius-sm);background:transparent;color:var(--boba-color-text-inverse)" />
+          <input [(ngModel)]="d.title" name="title-{{ i }}" placeholder="Title (120)" maxlength="120" style="padding:var(--boba-space-3);border:1px solid rgba(255,255,255,0.22);border-radius:var(--boba-radius-sm);background:transparent;color:var(--boba-color-text-inverse)" />
+          <textarea [(ngModel)]="d.announcement" name="announcement-{{ i }}" placeholder="Announcement (280) — shown under the title" maxlength="280" rows="2" style="padding:var(--boba-space-3);border:1px solid rgba(255,255,255,0.22);border-radius:var(--boba-radius-sm);background:transparent;color:var(--boba-color-text-inverse);resize:vertical"></textarea>
+          <label style="display:flex;align-items:center;gap:var(--boba-space-2);font-size:var(--boba-text-sm);opacity:0.8">
+            <input type="checkbox" [(ngModel)]="d.is_active" name="slide-active-{{ i }}" style="width:15px;height:15px" />
+            Show in carousel
+          </label>
         </div>
       </div>
 
-      <div *ngFor="let b of banners" style="background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse);border-radius:var(--boba-radius-md);padding:var(--boba-space-4);margin-bottom:var(--boba-space-2)">
-        <div style="display:flex;justify-content:space-between;align-items:baseline">
-          <div style="font-size:var(--boba-text-xs);letter-spacing:0.14em;text-transform:uppercase;opacity:0.6">{{ b.kicker }}</div>
-          <span class="mono" style="font-size:var(--boba-text-xs);opacity:0.5">#{{ b.sort }}{{ b.is_active ? '' : ' · inactive' }}</span>
-        </div>
-        <div style="font-size:var(--boba-text-sm);font-weight:var(--boba-weight-bold)">{{ b.title }}</div>
-        <div style="font-size:var(--boba-text-xs);opacity:0.7;margin-top:var(--boba-space-1)">{{ b.cta_label }} · {{ b.cta_type }}:{{ b.cta_value }}</div>
+      <div style="display:flex;gap:var(--boba-space-2)">
+        <button type="button" (click)="addSlide()" style="flex:1;padding:var(--boba-space-3);background:transparent;color:var(--boba-color-text);border:1px dashed var(--boba-color-border-strong);border-radius:var(--boba-radius-sm);font-weight:var(--boba-weight-semibold);letter-spacing:0.08em;text-transform:uppercase">+ Add slide</button>
+        <button type="submit" (click)="save()" [disabled]="busy" style="flex:2;padding:var(--boba-space-3);background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse);border:1px solid var(--boba-color-border-strong);border-radius:var(--boba-radius-sm);font-weight:var(--boba-weight-bold);letter-spacing:0.08em;text-transform:uppercase">
+          {{ busy ? 'Saving…' : 'Save carousel' }}
+        </button>
       </div>
-
-      <div style="border-top:1px solid var(--boba-color-border);margin-top:var(--boba-space-4);padding-top:var(--boba-space-4)">
-        <div style="font-size:var(--boba-text-xs);letter-spacing:0.12em;text-transform:uppercase;color:var(--boba-color-text-muted);margin-bottom:var(--boba-space-2)">New banner</div>
-        <form (ngSubmit)="publish()" style="display:flex;flex-direction:column;gap:var(--boba-space-2)">
-          <input [(ngModel)]="draft.kicker" name="kicker" placeholder="Kicker (40)" maxlength="40" style="padding:var(--boba-space-3);border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-sm)" />
-          <input [(ngModel)]="draft.title" name="title" placeholder="Title (120)" maxlength="120" style="padding:var(--boba-space-3);border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-sm)" />
-          <div style="display:flex;gap:var(--boba-space-2)">
-            <input [(ngModel)]="draft.cta_label" name="cta_label" placeholder="CTA (View →)" style="flex:1;padding:var(--boba-space-3);border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-sm)" />
-            <select [(ngModel)]="draft.cta_type" name="cta_type" style="padding:var(--boba-space-3);border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-sm)">
-              <option value="sku">sku</option><option value="url">url</option><option value="anchor">anchor</option>
-            </select>
-          </div>
-          <input [(ngModel)]="draft.cta_value" name="cta_value" placeholder="sku / url / anchor value" style="padding:var(--boba-space-3);border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-sm)" />
-          <input [(ngModel)]="draft.media_url" name="media_url" placeholder="media url (YouTube live, video, image — optional)" style="padding:var(--boba-space-3);border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-sm)" />
-          <div style="display:flex;align-items:center;gap:var(--boba-space-2)">
-            <label style="font-size:var(--boba-text-sm);color:var(--boba-color-text-muted)">Position</label>
-            <select [(ngModel)]="draft.sort" name="sort" style="padding:var(--boba-space-2) var(--boba-space-3);border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-sm)">
-              <option [value]="1">1</option><option [value]="2">2</option><option [value]="3">3</option>
-            </select>
-          </div>
-          <button type="submit" [disabled]="busy" style="padding:var(--boba-space-3);background:var(--boba-color-bg-inverse);color:var(--boba-color-text-inverse);border:1px solid var(--boba-color-border-strong);border-radius:var(--boba-radius-sm);font-weight:var(--boba-weight-bold);letter-spacing:0.08em;text-transform:uppercase">
-            {{ busy ? 'Publishing…' : 'Publish live' }}
-          </button>
-        </form>
-        <p *ngIf="error" style="font-size:var(--boba-text-sm);color:var(--boba-color-warn)">{{ error }}</p>
-        <p *ngIf="message" style="font-size:var(--boba-text-sm);color:var(--boba-color-success)">{{ message }}</p>
-      </div>
+      <p *ngIf="error" style="font-size:var(--boba-text-sm);color:var(--boba-color-warn)">{{ error }}</p>
+      <p *ngIf="message" style="font-size:var(--boba-text-sm);color:var(--boba-color-success)">{{ message }}</p>
     </div>
   `,
-  styles: [
-    `
-      .preview {
-        background: var(--boba-color-bg-inverse);
-        color: var(--boba-color-text-inverse);
-        border-radius: var(--boba-radius-md);
-        overflow: hidden;
-      }
-      .preview-video {
-        position: relative;
-        width: 100%;
-        aspect-ratio: 16/9;
-        background: #000;
-        overflow: hidden;
-      }
-      .preview-video iframe,
-      .preview-video video {
-        width: 100%;
-        height: 100%;
-        border: 0;
-        display: block;
-        object-fit: cover;
-      }
-      .preview-empty {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: var(--boba-text-sm);
-        opacity: 0.5;
-      }
-      .preview-live {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        background: #ff1a1a;
-        color: #fff;
-        padding: 4px 8px;
-        border-radius: var(--boba-radius-pill);
-        font-size: 10px;
-        letter-spacing: 0.06em;
-        font-weight: 800;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        z-index: 1;
-      }
-      .preview-live::before {
-        content: '';
-        width: 8px;
-        height: 8px;
-        background: #fff;
-        border-radius: 50%;
-        animation: livePulse 1.6s infinite;
-      }
-      @keyframes livePulse {
-        0%,
-        100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.35;
-        }
-      }
-      .preview-content {
-        padding: 14px 16px;
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 12px;
-      }
-      .preview-kicker {
-        font-size: 10px;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        opacity: 0.6;
-      }
-      .preview-title {
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-      }
-      .preview-cta {
-        flex-shrink: 0;
-        align-self: center;
-        font-size: 11px;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        border: 1px solid rgba(255, 255, 255, 0.22);
-        padding: 8px 12px;
-        border-radius: var(--boba-radius-sm);
-        background: transparent;
-        color: var(--boba-color-text-inverse);
-        white-space: nowrap;
-      }
-      @media (prefers-reduced-motion: reduce) {
-        .preview-live::before {
-          animation: none;
-        }
-      }
-    `,
-  ],
+  styles: [],
 })
 export class AdminBannersPage implements OnInit {
-  banners: Banner[] = [];
-  draft: Banner = {
-    kicker: 'House · Batch at :00',
-    title: 'Brown Sugar — brewed Taichung way',
-    cta_label: 'View →',
-    cta_type: 'sku',
-    cta_value: 'brown-sugar',
-    media_url: null,
-    sort: 1,
-    is_active: true,
-  };
+  live = true;
+  drafts: SlideDraft[] = [];
   busy = false;
   error = '';
   message = '';
+  private banner: Banner | null = null;
 
   constructor(private admin: AdminService) {}
 
@@ -188,44 +82,92 @@ export class AdminBannersPage implements OnInit {
     this.load();
   }
 
+  assetUrl = assetUrl;
+
   load(): void {
-    this.admin.listBanners().subscribe(banners => {
-      this.banners = banners;
-      const used = new Set(banners.filter(b => b.is_active).map(b => b.sort));
-      const free = [1, 2, 3].find(s => !used.has(s));
-      if (free !== undefined) {
-        this.draft.sort = free;
-      }
+    this.admin.listBanners().subscribe({
+      next: banners => {
+        this.banner = banners[0] ?? null;
+        this.live = this.banner?.is_active ?? true;
+        this.drafts = (this.banner?.slides ?? []).map(s => this.toDraft(s));
+      },
+      error: () => {
+        this.error = 'Could not load the carousel.';
+      },
     });
   }
 
-  isYoutube(url: string | null | undefined): boolean {
-    return !!url && /youtube\.com|youtu\.be/i.test(url);
+  private toDraft(s: BannerSlide): SlideDraft {
+    return {
+      image_url: s.image_url ?? null,
+      kicker: s.kicker,
+      title: s.title,
+      announcement: s.announcement || '',
+      position: s.position,
+      is_active: s.is_active,
+      file: null,
+      preview: null,
+    };
   }
 
-  youtubeEmbed(url: string | null | undefined): string | null {
-    if (!url) return null;
-    const m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|live\/)|youtu\.be\/)([\w-]{11})/);
-    if (m) return `https://www.youtube.com/embed/${m[1]}`;
-    return null;
+  addSlide(): void {
+    this.drafts.push({
+      image_url: null,
+      kicker: '',
+      title: '',
+      announcement: '',
+      position: this.drafts.length + 1,
+      is_active: true,
+      file: null,
+      preview: null,
+    });
   }
 
-  publish(): void {
+  remove(i: number): void {
+    this.drafts.splice(i, 1);
+  }
+
+  onMediaFile(file: File, i: number): void {
+    this.drafts[i].file = file;
+    this.drafts[i].image_url = null;
+    const reader = new FileReader();
+    reader.onload = () => (this.drafts[i].preview = reader.result as string);
+    reader.readAsDataURL(file);
+  }
+
+  async save(): Promise<void> {
     this.busy = true;
     this.error = '';
     this.message = '';
-    const payload: Banner = { ...this.draft, starts_at: new Date().toISOString() };
-    this.admin.createBanner(payload).subscribe({
-      next: () => {
-        this.busy = false;
-        this.message = 'Published — customers see it in <2s.';
-        this.load();
-      },
-      error: err => {
-        this.busy = false;
-        this.error = err?.error?.message || 'Publish failed.';
-        this.load();
-      },
-    });
+    try {
+      for (let i = 0; i < this.drafts.length; i++) {
+        const d = this.drafts[i];
+        d.position = i + 1;
+        if (d.file) {
+          d.image_url = (await firstValueFrom(this.admin.uploadImage(d.file))).url;
+          d.file = null;
+        }
+      }
+      const slides = this.drafts.map(d => ({
+        image_url: d.image_url,
+        kicker: d.kicker,
+        title: d.title,
+        announcement: d.announcement,
+        position: d.position,
+        is_active: d.is_active,
+      }));
+      if (this.banner?.id) {
+        await firstValueFrom(this.admin.updateBanner(this.banner.id, { is_active: this.live, slides }));
+      } else {
+        await firstValueFrom(this.admin.createBanner({ is_active: this.live, starts_at: new Date().toISOString(), slides }));
+      }
+      this.message = 'Carousel saved.';
+      this.load();
+    } catch (e) {
+      const body = (e as { error?: { message?: string } } | null)?.error;
+      this.error = body?.message || 'Save failed — check images are under 10 MB.';
+    } finally {
+      this.busy = false;
+    }
   }
 }

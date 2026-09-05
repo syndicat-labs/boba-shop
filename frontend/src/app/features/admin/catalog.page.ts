@@ -44,8 +44,8 @@ import { UploadCardComponent } from '../../core/ui/upload-card.component';
 
       <boba-modal [open]="modalOpen" title="Add product" (closed)="modalOpen = false">
         <form (ngSubmit)="submit()" style="display:flex;flex-direction:column;gap:var(--boba-space-3)">
-          <boba-upload-card label="Product image" [preview]="imagePreview" (fileSelected)="onImageFile($event)"></boba-upload-card>
-          <boba-upload-card label="Card thumbnail" [preview]="cardImagePreview" (fileSelected)="onCardImageFile($event)"></boba-upload-card>
+          <boba-upload-card label="Product image" [ratio]="16 / 9" [maxDimension]="1600" [preview]="imagePreview" (fileSelected)="onImageFile($event)"></boba-upload-card>
+          <boba-upload-card label="Card thumbnail" [ratio]="1" [maxDimension]="800" [preview]="cardImagePreview" (fileSelected)="onCardImageFile($event)"></boba-upload-card>
 
           <input [(ngModel)]="draft.name" name="name" placeholder="Name" maxlength="120" (input)="autoSku()" style="padding:var(--boba-space-3);border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-sm)" />
           <input [(ngModel)]="draft.sku" name="sku" placeholder="SKU (slug, auto-filled from name)" maxlength="64" (input)="skuTouched = true" style="padding:var(--boba-space-3);border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-sm)" />
@@ -93,8 +93,8 @@ import { UploadCardComponent } from '../../core/ui/upload-card.component';
 
         <ng-container *ngIf="selected && editMode">
           <form (ngSubmit)="saveEdit()" style="display:flex;flex-direction:column;gap:var(--boba-space-3)">
-            <boba-upload-card label="Product image" [preview]="editImagePreview" (fileSelected)="onEditImageFile($event)"></boba-upload-card>
-            <boba-upload-card label="Card thumbnail" [preview]="editCardImagePreview" (fileSelected)="onEditCardImageFile($event)"></boba-upload-card>
+            <boba-upload-card label="Product image" [ratio]="16 / 9" [maxDimension]="1600" [preview]="editImagePreview" (fileSelected)="onEditImageFile($event)"></boba-upload-card>
+            <boba-upload-card label="Card thumbnail" [ratio]="1" [maxDimension]="800" [preview]="editCardImagePreview" (fileSelected)="onEditCardImageFile($event)"></boba-upload-card>
 
             <input [(ngModel)]="editDraft.name" name="editName" placeholder="Name" maxlength="120" (input)="autoEditSku()" style="padding:var(--boba-space-3);border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-sm)" />
             <input [(ngModel)]="editDraft.sku" name="editSku" placeholder="SKU" maxlength="64" (input)="editSkuTouched = true" style="padding:var(--boba-space-3);border:1px solid var(--boba-color-border);border-radius:var(--boba-radius-sm)" />

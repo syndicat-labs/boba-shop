@@ -1,15 +1,36 @@
 from rest_framework import serializers
 
-from core.banners.models import Banner
+from core.banners.models import Banner, BannerSlide
 from core.catalog.models import Product
 from core.orders.models import Order
+from core.pricing.domain import Modifier
 
 
-class BannerSerializer(serializers.ModelSerializer):
+class CartItemSerializer(serializers.Serializer):
+    sku = serializers.CharField(max_length=64)
+    qty = serializers.IntegerField(min_value=1, max_value=99)
+    modifiers = serializers.ListField(
+        child=serializers.ChoiceField(choices=[m.value for m in Modifier]),
+        required=False,
+        default=list,
+        max_length=5,
+    )
+
+
+class OrderCreateSerializer(serializers.Serializer):
+    items = CartItemSerializer(many=True)
+
+    def validate_items(self, items: list[dict]) -> list[dict]:  # type: ignore[type-arg]
+        if len(items) > 20:
+            raise serializers.ValidationError("at most 20 distinct items per order")
+        return items
+
+
+class BannerSlideSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Banner
-        fields = ["id", "tenant", "kicker", "title", "cta_label", "cta_type", "cta_value", "media_url", "sort", "is_active", "starts_at", "ends_at", "created_at"]
-        read_only_fields = ["id", "tenant", "created_at"]
+        model = BannerSlide
+        fields = ["id", "image_url", "kicker", "title", "announcement", "position", "is_active"]
+        read_only_fields = ["id"]
 
     def validate_title(self, v: str) -> str:
         if len(v) > 120:
@@ -20,6 +41,38 @@ class BannerSerializer(serializers.ModelSerializer):
         if len(v) > 40:
             raise serializers.ValidationError("kicker max 40")
         return v
+
+    def validate_announcement(self, v: str) -> str:
+        if len(v) > 280:
+            raise serializers.ValidationError("announcement max 280")
+        return v
+
+
+class BannerSerializer(serializers.ModelSerializer):
+    slides = BannerSlideSerializer(many=True, required=False)
+
+    class Meta:
+        model = Banner
+        fields = ["id", "tenant", "is_active", "starts_at", "ends_at", "slides", "created_at"]
+        read_only_fields = ["id", "tenant", "created_at"]
+
+    def create(self, validated_data):  # type: ignore[no-untyped-def]
+        slides_data = validated_data.pop("slides", [])
+        banner = Banner.objects.create(**validated_data)
+        for s in slides_data:
+            BannerSlide.objects.create(banner=banner, **s)
+        return banner
+
+    def update(self, instance, validated_data):  # type: ignore[no-untyped-def]
+        slides_data = validated_data.pop("slides", None)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        if slides_data is not None:
+            instance.slides.all().delete()
+            for s in slides_data:
+                BannerSlide.objects.create(banner=instance, **s)
+        return instance
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -42,8 +95,8 @@ class ProductSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ["id", "status", "items", "subtotal", "total", "currency", "pickup_code", "pickup_expires_at", "receipt_s3_key", "created_at", "completed_at"]
-        read_only_fields = ["id", "status", "items", "subtotal", "total", "currency", "pickup_code", "pickup_expires_at", "receipt_s3_key", "created_at", "completed_at"]
+        fields = ["id", "tenant", "status", "items", "subtotal", "total", "currency", "pickup_code", "pickup_expires_at", "receipt_s3_key", "created_at", "completed_at"]
+        read_only_fields = ["id", "tenant", "status", "items", "subtotal", "total", "currency", "pickup_code", "pickup_expires_at", "receipt_s3_key", "created_at", "completed_at"]
 
 
 class StaffInviteSerializer(serializers.Serializer):

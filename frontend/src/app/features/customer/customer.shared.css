@@ -1,0 +1,87 @@
+/* Shared customer-page chrome (menu / tracking / checkout).
+ * Imported via styleUrls so the rules scope to each importing component.
+ * Value-free: tokens only. */
+
+.page {
+  width: 100%;
+  max-width: min(100vw, 390px);
+  margin: 0 auto;
+  min-height: 100dvh;
+  border-left: 1px solid var(--boba-color-border);
+  border-right: 1px solid var(--boba-color-border);
+  background: var(--boba-color-bg);
+  overflow-x: clip;
+}
+@media (max-width: 392px) {
+  .page {
+    border-left: none;
+    border-right: none;
+  }
+}
+
+.btn {
+  padding: 12px 16px;
+  border-radius: var(--boba-radius-sm);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--boba-font-body);
+  text-align: center;
+  text-decoration: none;
+  display: block;
+}
+.btn-primary {
+  background: var(--boba-color-bg-inverse);
+  color: var(--boba-color-text-inverse);
+  border: 1px solid var(--boba-color-border-strong);
+}
+.btn-ghost {
+  background: var(--boba-color-bg);
+  color: var(--boba-color-text);
+  border: 1px solid var(--boba-color-border);
+}
+.btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.badge {
+  font-size: 7.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 5px;
+  border: 1px solid var(--boba-color-border);
+  border-radius: var(--boba-radius-pill);
+  color: var(--boba-color-text-muted);
+  background: var(--boba-color-bg);
+  line-height: 1.2;
+}
+.badge--accent {
+  border-color: var(--boba-color-border-strong);
+  color: var(--boba-color-text);
+  font-weight: 600;
+}
+
+.state-note {
+  padding: 24px 16px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--boba-color-text-muted);
+}
+.state-note button {
+  display: block;
+  margin: 12px auto 0;
+  padding: 10px 16px;
+  border: 1px solid var(--boba-color-border-strong);
+  border-radius: var(--boba-radius-sm);
+  background: var(--boba-color-bg);
+  color: var(--boba-color-text);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--boba-font-body);
+}

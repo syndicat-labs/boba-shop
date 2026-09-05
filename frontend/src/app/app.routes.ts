@@ -19,6 +19,8 @@ export const routes: Routes = [
       { path: 'analytics', loadComponent: () => import('./features/admin/analytics.page').then(m => m.AnalyticsPage) },
     ],
   },
-  { path: '', pathMatch: 'full', redirectTo: 'admin' },
-  { path: '**', redirectTo: 'admin' },
+  { path: 'menu/:slug', loadComponent: () => import('./features/menu/menu.page').then(m => m.MenuPage) },
+  { path: 'tracking/:slug/:oid', loadComponent: () => import('./features/tracking/tracking.page').then(m => m.TrackingPage) },
+  { path: '', pathMatch: 'full', redirectTo: 'menu/boba-obsidian' },
+  { path: '**', redirectTo: 'menu/boba-obsidian' },
 ];

@@ -21,7 +21,10 @@
   --boba-color-accent-subtle: #f3f4f6;
   --boba-color-success: #16a34a;
   --boba-color-warn: #d97706;
+  --boba-color-danger: #ff1a1a;
   --boba-color-overlay: rgba(0,0,0,0.4);
+  --boba-color-border-inverse: rgba(255,255,255,0.22);
+  --boba-color-border-inverse-subtle: rgba(255,255,255,0.14);
 
   /* Surface */
   --boba-color-card-bg: #ffffff;
@@ -69,6 +72,7 @@
   --boba-shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
   --boba-shadow-md: 0 4px 12px rgba(0,0,0,0.08);
   --boba-shadow-lg: 0 12px 32px rgba(0,0,0,0.12);
+  --boba-shadow-overlay: 0 16px 48px rgba(10,10,10,0.22);
 
   /* Motion */
   --boba-duration-fast: 150ms;
@@ -76,6 +80,10 @@
   --boba-duration-slow: 320ms;
   --boba-ease-default: cubic-bezier(0.2, 0, 0, 1);
   --boba-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Media (menu row backdrops, banner tiles) */
+  --boba-media-fade-opacity: 0.58;
+  --boba-media-fade: linear-gradient(90deg, rgba(255,255,255,0) 52%, rgba(255,255,255,0.82) 78%, var(--boba-color-card-bg) 96%);
 
   /* Layout */
   --boba-header-h: 56px;

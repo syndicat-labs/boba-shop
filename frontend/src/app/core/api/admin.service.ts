@@ -30,16 +30,20 @@ export interface Product {
 
 export interface Banner {
   id?: string;
-  kicker: string;
-  title: string;
-  cta_label: string;
-  cta_type: 'sku' | 'url' | 'anchor';
-  cta_value: string;
-  media_url?: string | null;
-  sort: number;
   is_active: boolean;
   starts_at?: string;
   ends_at?: string | null;
+  slides: BannerSlide[];
+}
+
+export interface BannerSlide {
+  id?: string;
+  image_url?: string | null;
+  kicker: string;
+  title: string;
+  announcement?: string;
+  position: number;
+  is_active: boolean;
 }
 
 export interface StaffMember {
@@ -108,6 +112,10 @@ export class AdminService {
 
   createBanner(b: Banner): Observable<Banner> {
     return this.http.post<Banner>(`${this.base}/banners/`, b);
+  }
+
+  updateBanner(id: string, b: Partial<Banner>): Observable<Banner> {
+    return this.http.patch<Banner>(`${this.base}/banners/${id}/`, b);
   }
 
   listStaff(): Observable<StaffMember[]> {
